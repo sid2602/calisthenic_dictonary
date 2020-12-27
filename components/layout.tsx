@@ -1,4 +1,4 @@
-import Navigation from "components/navigation/navigation";
+import Navigation from "components/navigation";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -20,7 +20,6 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       <Navigation />
-
       <Box component="main">
         <Paper elevation={0} square className={classes.root}>
           <Container fixed>

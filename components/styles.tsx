@@ -5,5 +5,10 @@ export const GlobalStyle = createGlobalStyle`
   ${normalize}
   body{
     height: 100vh;
+    
+  }
+
+  a{
+    text-decoration: none;
   }
   `;
