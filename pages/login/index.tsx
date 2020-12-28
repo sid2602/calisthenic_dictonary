@@ -3,10 +3,13 @@ import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import { handleClick, handleClose } from "data/snackbarSlice";
+import { useDispatch } from "react-redux";
+import { Formik } from "formik";
+import React from "react";
+import { SnackbarType } from "data/snackbarSlice";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -52,31 +55,42 @@ const Icon = styled.img`
 
 const Login = () => {
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   return (
-    <Box component="section">
-      <Paper elevation={3} className={classes.paper}>
-        <Typography variant="h4" component="h2" className={classes.heading}>
-          Login
-        </Typography>
-        <form noValidate autoComplete="off" className={classes.form}>
-          <TextField id="standard-basic" label="Login" />
-          <TextField id="standard-basic" label="Password" />
-          <Button className={classes.firstButton}>Log in</Button>
-          <Button className={classes.button} style={{ background: "#4e71ba" }}>
-            <Icon src="img/fb.png" alt="fb" />
-            Log in with Facebook
-          </Button>
-          <Button
-            className={classes.button}
-            style={{ color: "gray", background: "#f4f4f4" }}
-          >
-            <Icon src="img/google.png" alt="google" />
-            Log in with Google
-          </Button>
-        </form>
-      </Paper>
-    </Box>
+    <>
+      <Box component="section">
+        <Paper elevation={3} className={classes.paper}>
+          <Typography variant="h4" component="h2" className={classes.heading}>
+            Login
+          </Typography>
+
+          <form noValidate autoComplete="off" className={classes.form}>
+            <TextField id="standard-basic" label="Username" />
+            <TextField id="standard-basic" label="Password" type="password" />
+            <Button
+              className={classes.firstButton}
+              onClick={() => dispatch(handleClick(SnackbarType.success))}
+            >
+              Log in
+            </Button>
+            <Button
+              className={classes.button}
+              style={{ background: "#4e71ba" }}
+            >
+              <Icon src="img/fb.png" alt="fb" />
+              Log in with Facebook
+            </Button>
+            <Button
+              className={classes.button}
+              style={{ color: "gray", background: "#f4f4f4" }}
+            >
+              <Icon src="img/google.png" alt="google" />
+              Log in with Google
+            </Button>
+          </form>
+        </Paper>
+      </Box>
+    </>
   );
 };
 
