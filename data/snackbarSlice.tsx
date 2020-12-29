@@ -11,13 +11,20 @@ export type SnackBarTypes = {
   snackbar: {
     type: SnackbarType;
     isOpen: boolean;
+    message: string;
   };
+};
+
+export type SnackBarHandleClick = {
+  type: SnackbarType;
+  message: string;
 };
 
 const initialState = {
   snackbar: {
     type: "success",
     isOpen: false,
+    message: "",
   },
 } as SnackBarTypes;
 export const SnackBarSlice = createSlice({
@@ -27,9 +34,10 @@ export const SnackBarSlice = createSlice({
     handleClose: (state) => {
       state.snackbar.isOpen = false;
     },
-    handleClick: (state, action: PayloadAction<SnackbarType>) => {
+    handleClick: (state, action: PayloadAction<SnackBarHandleClick>) => {
       state.snackbar.isOpen = true;
-      state.snackbar.type = action.payload;
+      state.snackbar.type = action.payload.type;
+      state.snackbar.message = action.payload.message;
     },
   },
 });

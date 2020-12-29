@@ -3,7 +3,8 @@
     "baseUrl": "./",
     "paths": {
       "Components": ["components"],
-      "data": ["data"]
+      "data": ["data"],
+      "schemas": ["schemas"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

@@ -19,7 +19,7 @@ const SnackBarComponent = () => {
     (state) => state.snackbar
   );
 
-  const { isOpen, type } = SnackBarState.snackbar;
+  const { isOpen, type, message } = SnackBarState.snackbar;
   const dispatch = useDispatch();
 
   return (
@@ -30,7 +30,7 @@ const SnackBarComponent = () => {
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
       <Alert onClose={() => dispatch(handleClose())} severity={type}>
-        This is a success message!
+        {message}
       </Alert>
     </Snackbar>
   );

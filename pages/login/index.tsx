@@ -7,9 +7,11 @@ import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import { handleClick, handleClose } from "data/snackbarSlice";
 import { useDispatch } from "react-redux";
-import { Formik } from "formik";
+import { Formik, FormikErrors } from "formik";
 import React from "react";
 import { SnackbarType } from "data/snackbarSlice";
+import LoginSchema from "schemas/loginSchema";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -56,6 +58,28 @@ const Icon = styled.img`
 const Login = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const onButtonClickError = (
+    errorsEmail: string | undefined,
+    errorsPassword: string | undefined
+  ) => {
+    if (errorsEmail || errorsPassword) {
+      dispatch(
+        handleClick({
+          type: SnackbarType.error,
+          message: `${errorsEmail}  ${errorsPassword}`,
+        })
+      );
+    } else if (errorsPassword === undefined && errorsEmail === undefined) {
+      dispatch(
+        handleClick({
+          type: SnackbarType.error,
+          message: `Email and passord are required`,
+        })
+      );
+    }
+  };
+
   return (
     <>
       <Box component="section">
@@ -63,31 +87,69 @@ const Login = () => {
           <Typography variant="h4" component="h2" className={classes.heading}>
             Login
           </Typography>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={LoginSchema}
+            onSubmit={() => {
+              dispatch(
+                handleClick({
+                  type: SnackbarType.success,
+                  message: "Success log in",
+                })
+              );
+            }}
+          >
+            {({ values, errors, handleChange, handleSubmit }) => (
+              <form
+                noValidate
+                autoComplete="off"
+                className={classes.form}
+                onSubmit={handleSubmit}
+              >
+                <TextField
+                  label="Email"
+                  type="email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                />
 
-          <form noValidate autoComplete="off" className={classes.form}>
-            <TextField id="standard-basic" label="Username" />
-            <TextField id="standard-basic" label="Password" type="password" />
-            <Button
-              className={classes.firstButton}
-              onClick={() => dispatch(handleClick(SnackbarType.success))}
-            >
-              Log in
-            </Button>
-            <Button
-              className={classes.button}
-              style={{ background: "#4e71ba" }}
-            >
-              <Icon src="img/fb.png" alt="fb" />
-              Log in with Facebook
-            </Button>
-            <Button
-              className={classes.button}
-              style={{ color: "gray", background: "#f4f4f4" }}
-            >
-              <Icon src="img/google.png" alt="google" />
-              Log in with Google
-            </Button>
-          </form>
+                <Button
+                  className={classes.firstButton}
+                  type="submit"
+                  onClick={() =>
+                    onButtonClickError(errors.email, errors.password)
+                  }
+                >
+                  Log in
+                </Button>
+                <Button
+                  className={classes.button}
+                  style={{ background: "#4e71ba" }}
+                >
+                  <Icon src="img/fb.png" alt="fb" />
+                  Log in with Facebook
+                </Button>
+                <Button
+                  className={classes.button}
+                  style={{ color: "gray", background: "#f4f4f4" }}
+                >
+                  <Icon src="img/google.png" alt="google" />
+                  Log in with Google
+                </Button>
+              </form>
+            )}
+          </Formik>
         </Paper>
       </Box>
     </>
