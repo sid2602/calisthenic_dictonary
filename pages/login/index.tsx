@@ -11,6 +11,9 @@ import { Formik, FormikErrors } from "formik";
 import React from "react";
 import { SnackbarType } from "data/snackbarSlice";
 import LoginSchema from "schemas/loginSchema";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { setUser } from "services/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,19 +61,31 @@ const Icon = styled.img`
 const Login = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const onButtonClickError = (
     errorsEmail: string | undefined,
-    errorsPassword: string | undefined
+    errorsPassword: string | undefined,
+    values: {
+      password: string;
+      email: string;
+    }
   ) => {
     if (errorsEmail || errorsPassword) {
       dispatch(
         handleClick({
           type: SnackbarType.error,
-          message: `${errorsEmail}  ${errorsPassword}`,
+          message: `${errorsEmail !== undefined ? errorsEmail : ""}  ${
+            errorsPassword !== undefined ? errorsPassword : ""
+          }`,
         })
       );
-    } else if (errorsPassword === undefined && errorsEmail === undefined) {
+    } else if (
+      errorsPassword === undefined &&
+      errorsEmail === undefined &&
+      values.email.length === 0 &&
+      values.password.length === 0
+    ) {
       dispatch(
         handleClick({
           type: SnackbarType.error,
@@ -93,13 +108,32 @@ const Login = () => {
               password: "",
             }}
             validationSchema={LoginSchema}
-            onSubmit={() => {
-              dispatch(
-                handleClick({
-                  type: SnackbarType.success,
-                  message: "Success log in",
-                })
-              );
+            onSubmit={async (values) => {
+              const loginSrc = `${process.env.API_URL}auth/local`;
+
+              try {
+                const { data } = await axios.post(loginSrc, {
+                  identifier: values.email,
+                  password: values.password,
+                });
+
+                setUser(data);
+                router.push("/");
+
+                dispatch(
+                  handleClick({
+                    type: SnackbarType.success,
+                    message: "Success log in",
+                  })
+                );
+              } catch {
+                dispatch(
+                  handleClick({
+                    type: SnackbarType.error,
+                    message: "Wrong Email or Password",
+                  })
+                );
+              }
             }}
           >
             {({ values, errors, handleChange, handleSubmit }) => (
@@ -128,7 +162,7 @@ const Login = () => {
                   className={classes.firstButton}
                   type="submit"
                   onClick={() =>
-                    onButtonClickError(errors.email, errors.password)
+                    onButtonClickError(errors.email, errors.password, values)
                   }
                 >
                   Log in

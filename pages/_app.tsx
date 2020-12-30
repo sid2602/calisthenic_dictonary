@@ -6,16 +6,19 @@ import Layout from "components/layout";
 import { Provider } from "react-redux";
 import store from "data/store";
 import SnackBar from "components/snackBar/snackbar";
+import { AuthProvider } from "components/AuthProvider/authProvider";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <ThemeProvider darkTheme={true}>
-        <GlobalStyle />
-        <Layout>
-          <SnackBar />
-          <Component {...pageProps} />
-        </Layout>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider darkTheme={true}>
+          <GlobalStyle />
+          <Layout>
+            <SnackBar />
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
+      </AuthProvider>
     </Provider>
   );
 }
