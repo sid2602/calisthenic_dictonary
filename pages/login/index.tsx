@@ -5,9 +5,9 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import { handleClick, handleClose } from "data/snackbarSlice";
+import { handleClick } from "data/snackbarSlice";
 import { useDispatch } from "react-redux";
-import { Formik, FormikErrors } from "formik";
+import { Formik } from "formik";
 import React from "react";
 import { SnackbarType } from "data/snackbarSlice";
 import LoginSchema from "schemas/loginSchema";
@@ -117,7 +117,8 @@ const Login = () => {
                   password: values.password,
                 });
 
-                setUser(data);
+                setUser(data.jwt);
+
                 router.push("/");
 
                 dispatch(

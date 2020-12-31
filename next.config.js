@@ -13,6 +13,7 @@ module.exports = {
   webpack: (config, options) => {
     config.resolve.alias["components"] = path.join(__dirname, "components");
     config.resolve.alias["data"] = path.join(__dirname, "data");
+    config.resolve.alias["helpers"] = path.join(__dirname, "helpers");
     config.resolve.alias["schemas"] = path.join(__dirname, "schemas");
     config.resolve.alias["assets"] = path.join(__dirname, "assets");
     config.resolve.alias["public"] = path.join(__dirname, "public");

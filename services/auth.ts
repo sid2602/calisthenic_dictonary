@@ -1,16 +1,48 @@
-export const isBrowser = () => typeof window !== undefined;
+import { setCookie, parseCookies } from "nookies";
+import { GetServerSidePropsContext } from "next";
+import axios from "axios";
+import User from "types/user";
 
-export const setUser = (user: string) => {
-  window.localStorage.setItem("DictonaryUser", JSON.stringify(user));
+export const setUser = (jwt: string) => {
+  setCookie(null, "jwt", jwt, {
+    maxAge: 30 * 24 * 60 * 60,
+    path: "/",
+  });
 };
 
-export const getUser = () => {
-  const user = window.localStorage.getItem("DictonaryUser");
+export const userIsLogged = async (context: GetServerSidePropsContext) => {
+  const { res } = context;
 
-  return isBrowser && user ? JSON.parse(user) : {};
-};
+  try {
+    const jwt = parseCookies(context).jwt;
+    if (jwt !== undefined) {
+      const checkSrc = `${process.env.API_URL}users/me`;
 
-export const isLoggedIn = () => {
-  const user = getUser();
-  return user.jwt ? (user.jwt as string) : null;
+      const { data } = await axios.get(checkSrc, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      return {
+        user: data as User,
+      };
+    }
+
+    if (jwt === undefined && res !== undefined) {
+      res.writeHead(307, { Location: "/login" });
+      res.end();
+
+      return {
+        user: null,
+      };
+    }
+  } catch (error) {
+    res.writeHead(307, { Location: "/login" });
+    res.end();
+
+    return {
+      user: null,
+    };
+  }
 };
