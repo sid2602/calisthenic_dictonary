@@ -5,16 +5,17 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import { handleClick } from "data/snackbarSlice";
+
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import React from "react";
+import { handleClick } from "data/snackbarSlice";
 import { SnackbarType } from "data/snackbarSlice";
 import LoginSchema from "schemas/loginSchema";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { setUser } from "services/auth";
-
+// import { onSubmitLogin } from "services/auth";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -50,6 +51,19 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       margin: "0.6rem auto",
     },
+    facebookBtn: {
+      background: "#4e71ba",
+      "&:hover": {
+        background: "#3b5998",
+      },
+    },
+    googlekBtn: {
+      color: "gray",
+      background: "#f4f4f4",
+      "&:hover": {
+        background: "#cdcdcd",
+      },
+    },
   })
 );
 
@@ -62,6 +76,9 @@ const Login = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const urlFacebook = process.env.API_URL + "connect/facebook";
+  const urlGoogle = process.env.API_URL + "connect/google";
 
   const onButtonClickError = (
     errorsEmail: string | undefined,
@@ -168,20 +185,20 @@ const Login = () => {
                 >
                   Log in
                 </Button>
-                <Button
-                  className={classes.button}
-                  style={{ background: "#4e71ba" }}
-                >
-                  <Icon src="img/fb.png" alt="fb" />
-                  Log in with Facebook
-                </Button>
-                <Button
-                  className={classes.button}
-                  style={{ color: "gray", background: "#f4f4f4" }}
-                >
-                  <Icon src="img/google.png" alt="google" />
-                  Log in with Google
-                </Button>
+                <a href={urlFacebook}>
+                  <Button
+                    className={`${classes.button} ${classes.facebookBtn}`}
+                  >
+                    <Icon src="img/fb.png" alt="fb" />
+                    Log in with Facebook
+                  </Button>
+                </a>
+                <a href={urlGoogle}>
+                  <Button className={`${classes.button} ${classes.googlekBtn}`}>
+                    <Icon src="img/google.png" alt="google" />
+                    Log in with Google
+                  </Button>
+                </a>
               </form>
             )}
           </Formik>
