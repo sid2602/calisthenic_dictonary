@@ -1,4 +1,4 @@
-import { setCookie, parseCookies } from "nookies";
+import { setCookie, parseCookies, destroyCookie } from "nookies";
 import { GetServerSidePropsContext } from "next";
 import axios from "axios";
 import User from "types/user";
@@ -8,6 +8,10 @@ export const setUser = (jwt: string) => {
     maxAge: 30 * 24 * 60 * 60,
     path: "/",
   });
+};
+
+export const logOutUser = () => {
+  destroyCookie(null, "jwt");
 };
 
 export const userIsLogged = async (context: GetServerSidePropsContext) => {

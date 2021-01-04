@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "400px",
       height: "450px",
       padding: theme.spacing(4),
+      [theme.breakpoints.down("xs")]: {
+        width: "300px",
+        height: "430px",
+      },
     },
     heading: {
       width: "100%",
@@ -42,14 +46,23 @@ const useStyles = makeStyles((theme: Theme) =>
       "& >div": {
         margin: " 0.6rem 0 ",
       },
+      [theme.breakpoints.down("xs")]: {
+        width: "95%",
+      },
     },
-    firstButton: {
-      width: "100%",
-      margin: "2rem auto 0.6rem auto",
-    },
+
     button: {
       width: "100%",
       margin: "0.6rem auto",
+      [theme.breakpoints.down("xs")]: {
+        fontSize: 15,
+      },
+    },
+    firstButton: {
+      margin: "2rem auto 0.6rem auto",
+      [theme.breakpoints.down("xs")]: {
+        margin: "1.5rem auto 0.6rem auto",
+      },
     },
     facebookBtn: {
       background: "#4e71ba",
@@ -177,7 +190,7 @@ const Login = () => {
                 />
 
                 <Button
-                  className={classes.firstButton}
+                  className={` ${classes.button} ${classes.firstButton}`}
                   type="submit"
                   onClick={() =>
                     onButtonClickError(errors.email, errors.password, values)

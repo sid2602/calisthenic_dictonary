@@ -6,10 +6,16 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { logOutUser } from "services/auth";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "0 0 0 2rem",
+  },
+  title: {
+    textAlign: "center",
   },
 }));
 
@@ -18,6 +24,15 @@ const DrawerIcon = styled.img`
 `;
 
 const Links = [
+  {
+    name: "CalisthenicDictonary",
+    link: "/",
+  },
+  {
+    name: "Profile",
+    link: "/Profile",
+    icon: <AccountCircleIcon style={{ fontSize: "35px" }} />,
+  },
   {
     name: "Training",
     link: "/training",
@@ -38,6 +53,12 @@ const Links = [
     link: "/statistic",
     icon: <EqualizerIcon style={{ fontSize: "40px" }} />,
   },
+  {
+    name: "log out",
+    link: "/login",
+    icon: <ExitToAppIcon style={{ fontSize: "40px" }} />,
+    onClick: logOutUser,
+  },
 ];
 
 const ListComponent = () => {
@@ -47,9 +68,13 @@ const ListComponent = () => {
     <>
       {Links.map((item) => (
         <Link key={item.name} href={item.link}>
-          <ListItem button>
-            <ListItemIcon className={classes.root}>{item.icon}</ListItemIcon>
-            <ListItemText>{item.name}</ListItemText>
+          <ListItem button onClick={item.onClick && item.onClick}>
+            {item.icon && (
+              <ListItemIcon className={classes.root}>{item.icon}</ListItemIcon>
+            )}
+            <ListItemText className={!item.icon ? classes.title : ""}>
+              {item.name}
+            </ListItemText>
           </ListItem>
         </Link>
       ))}

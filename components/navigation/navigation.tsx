@@ -26,21 +26,10 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
   iconContainer: {
-    width: 150,
+    flex: 1,
   },
   iconContainerRight: {
     textAlign: "right",
-  },
-  title: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: "1.4rem",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "1rem",
-    },
-    "& a": {
-      color: "white",
-    },
   },
 }));
 
@@ -64,10 +53,6 @@ const Navigation = () => {
             <MenuIcon />
           </IconButton>
         </Box>
-
-        <Typography variant="h6" className={classes.title}>
-          <a href="/">Calisthenic Dictonary</a>
-        </Typography>
 
         <Box
           className={`${classes.iconContainerRight} ${classes.iconContainer}`}

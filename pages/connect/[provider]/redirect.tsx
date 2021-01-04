@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+//To use buttons I need to change url to backend strapi and change url in google and facebook
+
 const LoginRedirect = (props: object) => {
   const classes = useStyles();
   const [text, setText] = useState(<CircularProgress size={50} />);
