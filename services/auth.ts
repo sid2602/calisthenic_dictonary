@@ -1,7 +1,7 @@
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import { GetServerSidePropsContext } from "next";
 import axios from "axios";
-import User from "types/user";
+import { User } from "types/user";
 
 export const setUser = (jwt: string) => {
   setCookie(null, "jwt", jwt, {
@@ -30,6 +30,7 @@ export const userIsLogged = async (context: GetServerSidePropsContext) => {
 
       return {
         user: data as User,
+        jwt,
       };
     }
 

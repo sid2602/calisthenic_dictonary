@@ -1,4 +1,4 @@
-type User = {
+export type User = {
   user: {
     email: string;
     provider: string;
@@ -10,4 +10,6 @@ type User = {
   };
 };
 
-export default User;
+export type Jwt = {
+  jwt: string;
+};

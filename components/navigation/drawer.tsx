@@ -19,9 +19,6 @@ const DrawerContainer = () => {
   return (
     <Drawer anchor="left" open={isActive} onClose={toogleDrawer}>
       <List aria-labelledby="nested-list-subheader" className={classes.list}>
-        {/* <Typography variant="h6">
-          <a href="/">Calisthenic Dictonary</a>
-        </Typography> */}
         <ListComponent />
       </List>
     </Drawer>

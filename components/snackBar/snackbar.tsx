@@ -4,7 +4,6 @@ import React from "react";
 import { handleClick, handleClose } from "data/snackbarSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { SnackBarTypes } from "data/snackbarSlice";
-import { AppStore } from "data/store";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
