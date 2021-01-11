@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
-
 import {
   makeStyles,
   createStyles,
@@ -17,13 +15,18 @@ import { handleClose } from "data/modalSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { ExercisesMuscleGroups } from "types/exercises";
-import ModalList from "./modalList";
+import ExercisesList from "./exerciseslList";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "300px",
       backgroundColor: theme.palette.background.paper,
+      margin: "0 auto",
+      [theme.breakpoints.down("xs")]: {
+        width: "250px",
+      },
     },
+
     nested: {
       paddingLeft: theme.spacing(4),
     },
@@ -67,7 +70,7 @@ const Exercises = () => {
           {exercisesGroups!.length > 0 ? (
             <>
               {exercisesGroups?.map((item) => (
-                <ModalList
+                <ExercisesList
                   item={item}
                   key={item.id}
                   setSelectedExercises={setSelectedExercises}
@@ -84,7 +87,7 @@ const Exercises = () => {
         <Button color="primary" onClick={() => dispatch(handleClose())}>
           Cancel
         </Button>
-        {selectedExercises !== null && <Button color="primary">Add</Button>}
+        {selectedExercises !== null && <Button color="secondary">Add</Button>}
       </DialogActions>
     </>
   );

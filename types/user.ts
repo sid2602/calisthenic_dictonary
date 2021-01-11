@@ -7,7 +7,12 @@ export type User = {
     role: object;
     created_at: string;
     updated_at: string;
-  };
+    routine: number;
+  } | null;
+};
+
+export type UserSlice = {
+  user: User;
 };
 
 export type Jwt = {

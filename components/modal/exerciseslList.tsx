@@ -25,7 +25,7 @@ type Props = {
   selectedExercises: number | null;
 };
 
-const ModalList = ({
+const ExercisesList = ({
   item,
   selectedExercises,
   setSelectedExercises,
@@ -87,4 +87,4 @@ const ModalList = ({
   );
 };
 
-export default ModalList;
+export default ExercisesList;

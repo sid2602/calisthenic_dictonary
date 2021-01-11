@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ModalTypes, ModalTypeTypes } from "data/modalSlice";
 import Dialog from "@material-ui/core/Dialog";
 import Exercises from "./exercises";
-
+import Routines from "./routines";
 type ModalT = {
   modal: ModalTypes;
 };
@@ -19,15 +19,17 @@ const ModalComponent = () => {
   const { isOpen, type } = ModalState.modal;
 
   return (
-    <div>
+    <section>
       <Dialog
         open={isOpen}
+        fullWidth={true}
+        maxWidth={type === ModalTypeTypes.exercises ? "xs" : "md"}
         onClose={() => dispatch(handleClose())}
         aria-labelledby="form-dialog-title"
       >
-        <Exercises />
+        {type !== ModalTypeTypes.exercises ? <Routines /> : <Exercises />}
       </Dialog>
-    </div>
+    </section>
   );
 };
 

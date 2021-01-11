@@ -15,7 +15,7 @@ const ThemeP = ({ children, darkTheme }: Props) => {
         contrastText: "white",
       },
       secondary: {
-        main: "#ff6e6c",
+        main: "#2cb67d",
         contrastText: "white",
       },
     },

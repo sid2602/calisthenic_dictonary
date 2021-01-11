@@ -1,9 +1,22 @@
 import { GetServerSideProps } from "next";
 import { userIsLogged } from "services/auth";
 import { User, Jwt } from "types/user";
+import { setUser } from "data/userSlice";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 const Home = ({ user, jwt }: User & Jwt) => {
-  return <pre>{JSON.stringify(user, null, 2)}</pre>;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const copyOfUser = {
+      user: user,
+    } as User;
+
+    dispatch(setUser(copyOfUser));
+  }, []);
+
+  return <div>Hello</div>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

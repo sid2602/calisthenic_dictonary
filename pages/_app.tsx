@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "data/store";
 import SnackBar from "components/snackBar/snackbar";
 import Modal from "components/modal/modal";
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
