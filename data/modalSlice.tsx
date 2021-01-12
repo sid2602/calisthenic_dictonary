@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export enum ModalTypeTypes {
   exercises = "exercises",
   routines = "routines",
+  singleRoutine = "singleRoutine",
 }
 
 export type ModalTypes = {

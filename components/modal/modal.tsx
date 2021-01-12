@@ -6,6 +6,8 @@ import { ModalTypes, ModalTypeTypes } from "data/modalSlice";
 import Dialog from "@material-ui/core/Dialog";
 import Exercises from "./exercises";
 import Routines from "./routines";
+import SingleRoutine from "./singleRoutine";
+
 type ModalT = {
   modal: ModalTypes;
 };
@@ -27,7 +29,13 @@ const ModalComponent = () => {
         onClose={() => dispatch(handleClose())}
         aria-labelledby="form-dialog-title"
       >
-        {type !== ModalTypeTypes.exercises ? <Routines /> : <Exercises />}
+        {type === ModalTypeTypes.exercises ? (
+          <Exercises />
+        ) : type === ModalTypeTypes.routines ? (
+          <Routines />
+        ) : (
+          <SingleRoutine />
+        )}
       </Dialog>
     </section>
   );

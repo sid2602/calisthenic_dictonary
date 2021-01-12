@@ -37,13 +37,6 @@ const ExercisesList = ({
   };
   const api_url = process.env.API_URL;
 
-  const handleListItemClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: number
-  ) => {
-    setSelectedExercises(index);
-  };
-
   return (
     <div key={`${item.id}exercisesGroups`}>
       <ListItem button onClick={handleClick}>
@@ -75,7 +68,7 @@ const ExercisesList = ({
               <ListItem
                 button
                 className={classes.nested}
-                onClick={(e) => handleListItemClick(e, exercises.id)}
+                onClick={() => setSelectedExercises(exercises.id)}
                 selected={exercises.id === selectedExercises}
               >
                 <ListItemText primary={exercises.name} />

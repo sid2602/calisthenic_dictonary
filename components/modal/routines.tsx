@@ -5,7 +5,15 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
-import { makeStyles, createStyles, Theme, Box } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  Box,
+  CardActionArea,
+  CircularProgress,
+  CardActions,
+} from "@material-ui/core";
 import { handleClose } from "data/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -18,22 +26,21 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Grid from "@material-ui/core/Grid";
 import { UserSlice } from "types/user";
 import { Routine } from "types/routine";
+import RoutinesList from "./routinesList";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: theme.palette.background.paper,
+      minHeight: "200px",
     },
+
     spaceBetween: {
       display: "flex",
       justifyContent: "space-between",
     },
-    typography: {
-      textAlign: "center",
-    },
-    paddingBottom: {
-      paddingBottom: "2.5rem",
-    },
-    card: {
+
+    grid: {
       maxWidth: "200px",
     },
   })
@@ -92,37 +99,13 @@ const Routines = () => {
           alignItems="center"
           spacing={2}
         >
-          {routines!.length > 0 &&
-            routines!.map((routine) => (
-              <Grid
-                item
-                xs={12}
-                sm={5}
-                className={classes.card}
-                key={routine.name + routine.id}
-              >
-                <Card>
-                  <CardHeader
-                    action={
-                      <IconButton aria-label="settings">
-                        <MoreVertIcon />
-                      </IconButton>
-                    }
-                  />
-                  <CardContent>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="h2"
-                      className={classes.typography}
-                    >
-                      {routine.name}
-                    </Typography>
-                  </CardContent>
-                  <Box className={classes.paddingBottom} />
-                </Card>
-              </Grid>
-            ))}
+          {routines!.length > 0 ? (
+            routines?.map((routine) => (
+              <RoutinesList routine={routine} key={routine.name + routine.id} />
+            ))
+          ) : (
+            <CircularProgress size={50} />
+          )}
         </Grid>
       </DialogContent>
       <DialogActions>
