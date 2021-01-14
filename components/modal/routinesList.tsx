@@ -6,9 +6,9 @@ import {
   createStyles,
   Theme,
 } from "@material-ui/core";
-
+import { setRoutine } from "data/modalSlice";
 import Card from "@material-ui/core/Card";
-
+import { useDispatch } from "react-redux";
 import CardContent from "@material-ui/core/CardContent";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -53,6 +53,7 @@ type Props = {
 const RoutinesList = ({ routine }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -89,7 +90,7 @@ const RoutinesList = ({ routine }: Props) => {
         </CardActions>
 
         <CardContent
-          onClick={() => console.log("something")}
+          onClick={() => dispatch(setRoutine({ routine }))}
           className={classes.cardContent}
         >
           <Typography

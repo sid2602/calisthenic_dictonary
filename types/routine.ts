@@ -1,6 +1,10 @@
+import { Exercise } from "./exercises";
+
 export type Routine = {
   id: number;
   name: string;
-  Exercises: object;
+  Exercises: {
+    exercises: Exercise[];
+  };
   image: object;
 };

@@ -1,14 +1,14 @@
 export type ExercisesMuscleGroups = {
   id: number;
   muscle_group: string;
-  exercises: Exercises[];
+  exercises: Exercise[];
   icon: {
     url: string;
     hash: string;
   };
 };
 
-export type Exercises = {
+export type Exercise = {
   id: number;
   name: string;
   description: string;

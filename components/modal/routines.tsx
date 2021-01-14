@@ -10,19 +10,12 @@ import {
   createStyles,
   Theme,
   Box,
-  CardActionArea,
   CircularProgress,
-  CardActions,
 } from "@material-ui/core";
 import { handleClose } from "data/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Grid from "@material-ui/core/Grid";
 import { UserSlice } from "types/user";
 import { Routine } from "types/routine";
@@ -84,10 +77,10 @@ const Routines = () => {
 
   return (
     <>
-      {console.log(routines)}
       <DialogTitle id="form-dialog-title">
         <Box className={classes.spaceBetween}>
           <Typography>Routines</Typography>
+
           <Button color="secondary">Add new routine</Button>
         </Box>
       </DialogTitle>

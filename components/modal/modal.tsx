@@ -25,7 +25,13 @@ const ModalComponent = () => {
       <Dialog
         open={isOpen}
         fullWidth={true}
-        maxWidth={type === ModalTypeTypes.exercises ? "xs" : "md"}
+        maxWidth={
+          type === ModalTypeTypes.exercises
+            ? "xs"
+            : type === ModalTypeTypes.singleRoutine
+            ? "sm"
+            : "md"
+        }
         onClose={() => dispatch(handleClose())}
         aria-labelledby="form-dialog-title"
       >
