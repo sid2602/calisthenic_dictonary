@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { ExercisesMuscleGroups } from "types/exercises";
 import ExercisesList from "./exerciseslList";
+import useSelectExercise from "helpers/useSelectExercise";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -38,9 +39,8 @@ const Exercises = () => {
   const [exercisesGroups, setExercisesGroups] = useState<
     ExercisesMuscleGroups[] | null
   >([]);
-  const [selectedExercises, setSelectedExercises] = useState<number | null>(
-    null
-  );
+
+  const { selectExercise, selectedExercises } = useSelectExercise(false, []);
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
 
@@ -73,8 +73,8 @@ const Exercises = () => {
                 <ExercisesList
                   item={item}
                   key={item.id}
-                  setSelectedExercises={setSelectedExercises}
                   selectedExercises={selectedExercises}
+                  selectExercise={selectExercise}
                 />
               ))}
             </>
@@ -87,7 +87,7 @@ const Exercises = () => {
         <Button color="primary" onClick={() => dispatch(handleClose())}>
           Cancel
         </Button>
-        {selectedExercises !== null && <Button color="secondary">Add</Button>}
+        {selectedExercises.length > 0 && <Button color="secondary">Add</Button>}
       </DialogActions>
     </>
   );

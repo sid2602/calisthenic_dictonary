@@ -20,14 +20,11 @@ import { handleClick, ModalTypeTypes } from "data/modalSlice";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-type ModalT = {
-  modal: ModalTypes;
-};
-
+import { useEffect } from "react";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listItem: {
-      background: theme.palette.action.selected,
+      // background: theme.palette.action.selected,
       borderRadius: "5px",
     },
   })
@@ -35,15 +32,27 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   exercise: Exercise;
+  selectedExercises: number[];
+  selectExercise: (exerciseid: number) => void;
 };
 
-const SingleRoutineList = ({ exercise }: Props) => {
+const SingleRoutineList = ({
+  exercise,
+  selectedExercises,
+
+  selectExercise,
+}: Props) => {
   const classes = useStyles();
 
   return (
     <>
       <List aria-label="main mailbox folders">
-        <ListItem button className={classes.listItem}>
+        <ListItem
+          button
+          className={classes.listItem}
+          onClick={() => selectExercise(exercise.id)}
+          selected={selectedExercises.indexOf(exercise.id) > -1}
+        >
           <ListItemText primary={exercise.name} />
           <ListItemSecondaryAction>
             <IconButton edge="end" aria-label="delete">

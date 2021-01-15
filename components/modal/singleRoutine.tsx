@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { ModalTypes, handleClose } from "data/modalSlice";
-import { useEffect, useState } from "react";
-import { parseCookies } from "nookies";
+import { useState, useEffect } from "react";
+
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -20,6 +20,9 @@ import Typography from "@material-ui/core/Typography";
 import { handleClick, ModalTypeTypes } from "data/modalSlice";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import SingleRoutineList from "./singleRoutineList";
+// import selectExercise from "helpers/selectExercise";
+
+import useSelectExercise from "helpers/useSelectExercise";
 
 type ModalT = {
   modal: ModalTypes;
@@ -60,6 +63,11 @@ const SingleRoutine = () => {
   const classes = useStyles();
   const { routine } = ModalState.modal;
 
+  const { selectExercise, selectedExercises } = useSelectExercise(
+    true,
+    routine ? routine.Exercises.exercises : []
+  );
+
   return (
     <>
       <DialogTitle id="form-dialog-title">
@@ -84,6 +92,8 @@ const SingleRoutine = () => {
           <SingleRoutineList
             key={exercise.id + exercise.name}
             exercise={exercise}
+            selectedExercises={selectedExercises}
+            selectExercise={selectExercise}
           />
         ))}
       </DialogContent>
@@ -91,6 +101,7 @@ const SingleRoutine = () => {
         <Button color="primary" onClick={() => dispatch(handleClose())}>
           Cancel
         </Button>
+        {selectedExercises.length > 0 && <Button color="secondary">Add</Button>}
       </DialogActions>
     </>
   );
