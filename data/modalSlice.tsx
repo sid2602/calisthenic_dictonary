@@ -10,7 +10,8 @@ export type ModalTypes = {
   modal: {
     type: ModalTypeTypes;
     isOpen: boolean;
-    routine: Routine | null;
+    activeRoutine: number | null;
+    routines: Routine[] | null;
   };
 };
 
@@ -18,15 +19,24 @@ export type ModalHandleClick = {
   type: ModalTypeTypes;
 };
 
-export type SetRoutineType = {
-  routine: Routine;
+export type SetRoutinesType = {
+  routines: Routine[] | null;
+};
+
+export type SetActiveRoutineType = {
+  activeRoutine: number | null;
+};
+
+export type ModalT = {
+  modal: ModalTypes;
 };
 
 const initialState = {
   modal: {
     type: "exercises",
     isOpen: false,
-    routine: null,
+    activeRoutine: null,
+    routines: null,
   },
 } as ModalTypes;
 
@@ -41,13 +51,28 @@ export const ModalSlice = createSlice({
       state.modal.isOpen = true;
       state.modal.type = action.payload.type;
     },
-    setRoutine: (state, action: PayloadAction<SetRoutineType>) => {
-      state.modal.routine = action.payload.routine;
-      state.modal.type = ModalTypeTypes.singleRoutine;
+    setRoutines: (state, action: PayloadAction<SetRoutinesType>) => {
+      state.modal.routines = action.payload.routines;
+    },
+    setActiveRoutine: (state, action: PayloadAction<SetActiveRoutineType>) => {
+      if (state.modal.routines !== null) {
+        const findActiveRoutine = state.modal.routines.findIndex(
+          (routine) => routine.id === action.payload.activeRoutine
+        );
+
+        state.modal.activeRoutine =
+          findActiveRoutine > -1 ? findActiveRoutine : null;
+        state.modal.type = ModalTypeTypes.singleRoutine;
+      }
     },
   },
 });
 
-export const { handleClick, handleClose, setRoutine } = ModalSlice.actions;
+export const {
+  handleClick,
+  handleClose,
+  setActiveRoutine,
+  setRoutines,
+} = ModalSlice.actions;
 
 export default ModalSlice.reducer;

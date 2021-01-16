@@ -4,7 +4,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
+
 import {
   makeStyles,
   createStyles,
@@ -12,14 +12,15 @@ import {
   Box,
   CircularProgress,
 } from "@material-ui/core";
-import { handleClose } from "data/modalSlice";
+import { handleClose, ModalT } from "data/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import { UserSlice } from "types/user";
-import { Routine } from "types/routine";
+
 import RoutinesList from "./routinesList";
+
+import useUpdateRoutines from "helpers/useUpdateRoutines";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,38 +42,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Routines = () => {
   const classes = useStyles();
-  const [routines, setRoutines] = useState<Routine[] | null>([]);
-  const dispatch = useDispatch();
-  const api_url = process.env.API_URL;
 
-  const userState = useSelector<UserSlice, UserSlice["user"]>(
-    (state) => state.user
+  const dispatch = useDispatch();
+
+  const { getRoutines } = useUpdateRoutines();
+
+  const modalState = useSelector<ModalT, ModalT["modal"]>(
+    (state) => state.modal
   );
 
-  console.log(routines);
+  const { routines } = modalState.modal;
 
   useEffect(() => {
-    const getExercises = async () => {
-      try {
-        const { jwt } = parseCookies();
-
-        const { data } = await axios(
-          `${api_url}routines/${userState.user?.routine}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-            },
-          }
-        );
-
-        const { Routine } = data;
-
-        setRoutines(Routine);
-      } catch (e) {
-        setRoutines(null);
-      }
-    };
-    getExercises();
+    getRoutines();
   }, []);
 
   return (
@@ -92,7 +74,7 @@ const Routines = () => {
           alignItems="center"
           spacing={2}
         >
-          {routines!.length > 0 ? (
+          {routines !== null && routines.length > 0 ? (
             routines?.map((routine) => (
               <RoutinesList routine={routine} key={routine.name + routine.id} />
             ))

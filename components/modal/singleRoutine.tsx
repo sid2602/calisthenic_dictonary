@@ -1,6 +1,4 @@
 import { useSelector, useDispatch } from "react-redux";
-import { ModalTypes, handleClose } from "data/modalSlice";
-import { useState, useEffect } from "react";
 
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -12,21 +10,22 @@ import {
   createStyles,
   Theme,
   Box,
-  CircularProgress,
   IconButton,
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 
-import { handleClick, ModalTypeTypes } from "data/modalSlice";
+import {
+  handleClick,
+  ModalTypeTypes,
+  ModalT,
+  handleClose,
+} from "data/modalSlice";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import SingleRoutineList from "./singleRoutineList";
-// import selectExercise from "helpers/selectExercise";
 
 import useSelectExercise from "helpers/useSelectExercise";
 
-type ModalT = {
-  modal: ModalTypes;
-};
+import useUpdateRoutines from "helpers/useUpdateRoutines";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,48 +60,82 @@ const SingleRoutine = () => {
   );
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { routine } = ModalState.modal;
+
+  const { routines, activeRoutine } = ModalState.modal;
 
   const { selectExercise, selectedExercises } = useSelectExercise(
     true,
-    routine ? routine.Exercises.exercises : []
+    routines !== null && activeRoutine !== null
+      ? routines[activeRoutine].Exercises.exercises
+      : []
   );
+
+  const { removeExercise } = useUpdateRoutines();
+
+  const deleteExercise = (exerciseId: number) => {
+    if (routines !== null && activeRoutine !== null) {
+      const routine = routines[activeRoutine];
+      const exercises = routine.Exercises.exercises.filter(
+        (exercise) => exercise.id !== exerciseId
+      );
+
+      const newRoutine = {
+        ...routine,
+        Exercises: {
+          exercises,
+        },
+      };
+
+      const newRoutines = routines.map((routine) =>
+        routine.id === newRoutine.id ? newRoutine : routine
+      );
+
+      removeExercise(newRoutines);
+    }
+  };
 
   return (
     <>
-      <DialogTitle id="form-dialog-title">
-        <Box className={classes.spaceBetween}>
-          <Box className={classes.flex}>
-            <IconButton
-              aria-controls="fade-menu"
-              aria-label="settings"
-              onClick={() =>
-                dispatch(handleClick({ type: ModalTypeTypes.routines }))
-              }
-            >
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography>{routine!.name}</Typography>
-          </Box>
-          <Button color="secondary">Add exercise to routine</Button>
-        </Box>
-      </DialogTitle>
-      <DialogContent className={classes.root}>
-        {routine?.Exercises.exercises.map((exercise) => (
-          <SingleRoutineList
-            key={exercise.id + exercise.name}
-            exercise={exercise}
-            selectedExercises={selectedExercises}
-            selectExercise={selectExercise}
-          />
-        ))}
-      </DialogContent>
-      <DialogActions>
-        <Button color="primary" onClick={() => dispatch(handleClose())}>
-          Cancel
-        </Button>
-        {selectedExercises.length > 0 && <Button color="secondary">Add</Button>}
-      </DialogActions>
+      {routines !== null && activeRoutine !== null ? (
+        <>
+          <DialogTitle id="form-dialog-title">
+            <Box className={classes.spaceBetween}>
+              <Box className={classes.flex}>
+                <IconButton
+                  aria-controls="fade-menu"
+                  aria-label="settings"
+                  onClick={() =>
+                    dispatch(handleClick({ type: ModalTypeTypes.routines }))
+                  }
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+                <Typography>{routines[activeRoutine].name}</Typography>
+              </Box>
+              <Button color="secondary">Add exercise to routine</Button>
+            </Box>
+          </DialogTitle>
+          <DialogContent className={classes.root}>
+            {routines[activeRoutine]?.Exercises.exercises.map((exercise) => (
+              <SingleRoutineList
+                key={exercise.id + exercise.name}
+                exercise={exercise}
+                selectedExercises={selectedExercises}
+                selectExercise={selectExercise}
+                deleteExercise={deleteExercise}
+              />
+            ))}
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={() => dispatch(handleClose())}>
+              Cancel
+            </Button>
+            {selectedExercises.length > 0 && (
+              <Button color="secondary">Add</Button>
+            )}
+          </DialogActions>
+        </>
+      ) : null}
     </>
   );
 };

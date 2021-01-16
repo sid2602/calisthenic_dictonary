@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
 } from "@material-ui/core";
-import { setRoutine } from "data/modalSlice";
+import { setActiveRoutine } from "data/modalSlice";
 import Card from "@material-ui/core/Card";
 import { useDispatch } from "react-redux";
 import CardContent from "@material-ui/core/CardContent";
@@ -90,7 +90,9 @@ const RoutinesList = ({ routine }: Props) => {
         </CardActions>
 
         <CardContent
-          onClick={() => dispatch(setRoutine({ routine }))}
+          onClick={() =>
+            dispatch(setActiveRoutine({ activeRoutine: routine.id }))
+          }
           className={classes.cardContent}
         >
           <Typography

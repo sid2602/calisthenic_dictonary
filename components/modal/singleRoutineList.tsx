@@ -1,9 +1,8 @@
 import { Exercise } from "types/exercises";
-import { ModalTypes } from "data/modalSlice";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import {
@@ -11,16 +10,11 @@ import {
   createStyles,
   Theme,
   Box,
-  CircularProgress,
   IconButton,
 } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import { handleClick, ModalTypeTypes } from "data/modalSlice";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import { useEffect } from "react";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listItem: {
@@ -34,12 +28,13 @@ type Props = {
   exercise: Exercise;
   selectedExercises: number[];
   selectExercise: (exerciseid: number) => void;
+  deleteExercise: (exerciseid: number) => void;
 };
 
 const SingleRoutineList = ({
   exercise,
   selectedExercises,
-
+  deleteExercise,
   selectExercise,
 }: Props) => {
   const classes = useStyles();
@@ -55,7 +50,11 @@ const SingleRoutineList = ({
         >
           <ListItemText primary={exercise.name} />
           <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="delete">
+            <IconButton
+              edge="end"
+              aria-label="delete"
+              onClick={() => deleteExercise(exercise.id)}
+            >
               <DeleteIcon />
             </IconButton>
           </ListItemSecondaryAction>
