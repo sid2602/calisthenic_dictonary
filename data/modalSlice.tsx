@@ -12,6 +12,7 @@ export type ModalTypes = {
     isOpen: boolean;
     activeRoutine: number | null;
     routines: Routine[] | null;
+    addExerciseToRoutineFlag: boolean;
   };
 };
 
@@ -27,6 +28,10 @@ export type SetActiveRoutineType = {
   activeRoutine: number | null;
 };
 
+export type SetAddExerciseToRoutine = {
+  flag: boolean;
+};
+
 export type ModalT = {
   modal: ModalTypes;
 };
@@ -37,6 +42,7 @@ const initialState = {
     isOpen: false,
     activeRoutine: null,
     routines: null,
+    addExerciseToRoutineFlag: false,
   },
 } as ModalTypes;
 
@@ -65,6 +71,19 @@ export const ModalSlice = createSlice({
         state.modal.type = ModalTypeTypes.singleRoutine;
       }
     },
+    setAddExerciseToRoutineFlag: (
+      state,
+      action: PayloadAction<SetAddExerciseToRoutine>
+    ) => {
+      const { flag } = action.payload;
+      state.modal.addExerciseToRoutineFlag = flag;
+
+      if (flag === true) {
+        state.modal.type = ModalTypeTypes.exercises;
+      } else {
+        state.modal.type = ModalTypeTypes.singleRoutine;
+      }
+    },
   },
 });
 
@@ -73,6 +92,7 @@ export const {
   handleClose,
   setActiveRoutine,
   setRoutines,
+  setAddExerciseToRoutineFlag,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

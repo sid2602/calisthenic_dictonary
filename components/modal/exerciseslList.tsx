@@ -8,7 +8,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import Collapse from "@material-ui/core/Collapse";
-import { ExercisesMuscleGroups } from "types/exercises";
+import { ExercisesMuscleGroups, Exercise } from "types/exercises";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   item: ExercisesMuscleGroups;
-  selectedExercises: number[];
-  selectExercise: (exerciseid: number) => void;
+  selectedExercises: Exercise[];
+  selectExercise: (exercise: Exercise) => void;
 };
 
 const ExercisesList = ({ item, selectedExercises, selectExercise }: Props) => {
@@ -64,8 +64,12 @@ const ExercisesList = ({ item, selectedExercises, selectExercise }: Props) => {
               <ListItem
                 button
                 className={classes.nested}
-                onClick={() => selectExercise(exercises.id)}
-                selected={selectedExercises.indexOf(exercises.id) > -1}
+                onClick={() => selectExercise(exercises)}
+                selected={
+                  selectedExercises
+                    .map((item) => item.id)
+                    .indexOf(exercises.id) > -1
+                }
               >
                 <ListItemText primary={exercises.name} />
               </ListItem>

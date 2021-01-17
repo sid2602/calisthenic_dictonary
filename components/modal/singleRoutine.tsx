@@ -19,13 +19,12 @@ import {
   ModalTypeTypes,
   ModalT,
   handleClose,
+  setAddExerciseToRoutineFlag,
 } from "data/modalSlice";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import SingleRoutineList from "./singleRoutineList";
 
 import useSelectExercise from "helpers/useSelectExercise";
-
-import useUpdateRoutines from "helpers/useUpdateRoutines";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,30 +69,6 @@ const SingleRoutine = () => {
       : []
   );
 
-  const { removeExercise } = useUpdateRoutines();
-
-  const deleteExercise = (exerciseId: number) => {
-    if (routines !== null && activeRoutine !== null) {
-      const routine = routines[activeRoutine];
-      const exercises = routine.Exercises.exercises.filter(
-        (exercise) => exercise.id !== exerciseId
-      );
-
-      const newRoutine = {
-        ...routine,
-        Exercises: {
-          exercises,
-        },
-      };
-
-      const newRoutines = routines.map((routine) =>
-        routine.id === newRoutine.id ? newRoutine : routine
-      );
-
-      removeExercise(newRoutines);
-    }
-  };
-
   return (
     <>
       {routines !== null && activeRoutine !== null ? (
@@ -112,7 +87,14 @@ const SingleRoutine = () => {
                 </IconButton>
                 <Typography>{routines[activeRoutine].name}</Typography>
               </Box>
-              <Button color="secondary">Add exercise to routine</Button>
+              <Button
+                color="secondary"
+                onClick={() =>
+                  dispatch(setAddExerciseToRoutineFlag({ flag: true }))
+                }
+              >
+                Add exercise to routine
+              </Button>
             </Box>
           </DialogTitle>
           <DialogContent className={classes.root}>
@@ -122,7 +104,6 @@ const SingleRoutine = () => {
                 exercise={exercise}
                 selectedExercises={selectedExercises}
                 selectExercise={selectExercise}
-                deleteExercise={deleteExercise}
               />
             ))}
           </DialogContent>

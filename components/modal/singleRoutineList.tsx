@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 
 import DeleteIcon from "@material-ui/icons/Delete";
+import useUpdateRoutines from "helpers/useUpdateRoutines";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,18 +27,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Props = {
   exercise: Exercise;
-  selectedExercises: number[];
-  selectExercise: (exerciseid: number) => void;
-  deleteExercise: (exerciseid: number) => void;
+  selectedExercises: Exercise[];
+  selectExercise: (exercise: Exercise) => void;
 };
 
 const SingleRoutineList = ({
   exercise,
   selectedExercises,
-  deleteExercise,
+
   selectExercise,
 }: Props) => {
   const classes = useStyles();
+
+  const { removeExercise } = useUpdateRoutines();
 
   return (
     <>
@@ -45,15 +47,17 @@ const SingleRoutineList = ({
         <ListItem
           button
           className={classes.listItem}
-          onClick={() => selectExercise(exercise.id)}
-          selected={selectedExercises.indexOf(exercise.id) > -1}
+          onClick={() => selectExercise(exercise)}
+          selected={
+            selectedExercises.map((item) => item.id).indexOf(exercise.id) > -1
+          }
         >
           <ListItemText primary={exercise.name} />
           <ListItemSecondaryAction>
             <IconButton
               edge="end"
               aria-label="delete"
-              onClick={() => deleteExercise(exercise.id)}
+              onClick={() => removeExercise(exercise.id)}
             >
               <DeleteIcon />
             </IconButton>

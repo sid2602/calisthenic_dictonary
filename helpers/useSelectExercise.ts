@@ -2,21 +2,22 @@ import { useState, useEffect } from "react";
 import { Exercise } from "types/exercises";
 
 const useSelectExercise = (selectAll: boolean, exercises: Exercise[]) => {
-  const [selectedExercises, setSelectedExercises] = useState<number[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
 
-  const selectExercise = (exerciseId: number): void => {
-    const index = selectedExercises.indexOf(exerciseId);
+  const selectExercise = (exercise: Exercise): void => {
+    const index = selectedExercises
+      .map((index) => index.id)
+      .indexOf(exercise.id);
     index === -1
-      ? setSelectedExercises([...selectedExercises, exerciseId])
+      ? setSelectedExercises([...selectedExercises, exercise])
       : setSelectedExercises(
-          selectedExercises.filter((item) => item !== exerciseId)
+          selectedExercises.filter((item) => item.id !== exercise.id)
         );
   };
 
   useEffect(() => {
     if (selectAll) {
-      const exercisesIds = exercises.map((exercise) => exercise.id);
-      setSelectedExercises([...selectedExercises, ...exercisesIds]);
+      setSelectedExercises([...selectedExercises, ...exercises]);
     }
   }, []);
 

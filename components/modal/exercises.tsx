@@ -11,12 +11,13 @@ import {
   Theme,
   CircularProgress,
 } from "@material-ui/core";
-import { handleClose } from "data/modalSlice";
-import { useDispatch } from "react-redux";
+import { handleClose, ModalT } from "data/modalSlice";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ExercisesMuscleGroups } from "types/exercises";
 import ExercisesList from "./exerciseslList";
 import useSelectExercise from "helpers/useSelectExercise";
+import useUpdateRoutines from "helpers/useUpdateRoutines";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -36,6 +37,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Exercises = () => {
   const classes = useStyles();
+
+  const ModalState = useSelector<ModalT, ModalT["modal"]>(
+    (state) => state.modal
+  );
+
+  const { addExerciseToRoutineFlag } = ModalState.modal;
+
   const [exercisesGroups, setExercisesGroups] = useState<
     ExercisesMuscleGroups[] | null
   >([]);
@@ -43,6 +51,13 @@ const Exercises = () => {
   const { selectExercise, selectedExercises } = useSelectExercise(false, []);
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
+  const { addExercisesToRoutine } = useUpdateRoutines();
+
+  const onClickAddButton = () => {
+    if (addExerciseToRoutineFlag) {
+      addExercisesToRoutine(selectedExercises);
+    }
+  };
 
   useEffect(() => {
     const getExercises = async () => {
@@ -87,7 +102,11 @@ const Exercises = () => {
         <Button color="primary" onClick={() => dispatch(handleClose())}>
           Cancel
         </Button>
-        {selectedExercises.length > 0 && <Button color="secondary">Add</Button>}
+        {selectedExercises.length > 0 && (
+          <Button color="secondary" onClick={onClickAddButton}>
+            Add
+          </Button>
+        )}
       </DialogActions>
     </>
   );
