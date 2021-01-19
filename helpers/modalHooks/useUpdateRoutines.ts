@@ -145,7 +145,7 @@ const useUpdateRoutines = () => {
 
   const addNewRoutine = async (name: string) => {
     try {
-      if (routines !== null) {
+      if (routines !== null && name !== "") {
         const newRoutine = {
           image: [],
           Exercises: {
@@ -165,18 +165,94 @@ const useUpdateRoutines = () => {
             type: SnackbarType.success,
           })
         );
+      } else {
+        throw new Error();
       }
     } catch (e) {
       dispatch(
         openSnackbar({
-          message: "Can't add new routine",
+          message: ` ${
+            name === "" ? "Add a name for the routine" : "Can't add new routine"
+          }`,
           type: SnackbarType.error,
         })
       );
     }
   };
 
-  return { getRoutines, removeExercise, addExercisesToRoutine, addNewRoutine };
+  const removeRoutine = async (routineId: number) => {
+    try {
+      if (routines !== null) {
+        const newRoutines = routines.filter(
+          (routine) => routine.id !== routineId
+        );
+
+        const response = await putRequest(newRoutines);
+        dispatch(setRoutines({ routines: response }));
+        dispatch(setRoutines({ routines: response }));
+        dispatch(
+          openSnackbar({
+            message: "Successfully removed exercise",
+            type: SnackbarType.success,
+          })
+        );
+      }
+    } catch (e) {
+      dispatch(
+        openSnackbar({
+          message: "Can't remove routine",
+          type: SnackbarType.error,
+        })
+      );
+    }
+  };
+
+  const editRoutine = async (name: string) => {
+    try {
+      if (routines !== null && name !== "" && activeRoutine !== null) {
+        const routine = routines[activeRoutine];
+
+        const newRoutine = {
+          ...routine,
+          name: name,
+        };
+
+        const newRoutines = routines.map((item) =>
+          item.id === newRoutine.id ? newRoutine : item
+        );
+
+        const response = await putRequest(newRoutines);
+        dispatch(handleClose());
+        dispatch(setRoutines({ routines: response }));
+        dispatch(
+          openSnackbar({
+            message: "successfully rename",
+            type: SnackbarType.success,
+          })
+        );
+      } else {
+        throw new Error();
+      }
+    } catch (e) {
+      dispatch(
+        openSnackbar({
+          message: ` ${
+            name === "" ? "Add a name for the routine" : "Can't edit routine"
+          }`,
+          type: SnackbarType.error,
+        })
+      );
+    }
+  };
+
+  return {
+    getRoutines,
+    removeExercise,
+    addExercisesToRoutine,
+    addNewRoutine,
+    removeRoutine,
+    editRoutine,
+  };
 };
 
 export default useUpdateRoutines;

@@ -8,28 +8,44 @@ import { useDispatch } from "react-redux";
 import { handleClose } from "data/dialogSlice";
 import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
 import { useRef } from "react";
+import { openDialog, DialogType } from "data/dialogSlice";
 
-const NewRoutineDialog = () => {
+type Props = {
+  type: DialogType;
+};
+
+const RoutineDialog = ({ type }: Props) => {
   const dispatch = useDispatch();
-  const { addNewRoutine } = useUpdateRoutines();
+  const { addNewRoutine, editRoutine } = useUpdateRoutines();
   const textInput = useRef<HTMLInputElement>(null);
 
   const onInputClick = () => {
     const { current } = textInput;
 
-    if (current && current.value !== "") addNewRoutine(current.value);
+    if (current) {
+      type === DialogType.add_new_routine && addNewRoutine(current.value);
+      type === DialogType.edit_routine && editRoutine(current.value);
+    }
   };
+
+  const checkIsNewRoutine = () => type === DialogType.add_new_routine;
 
   return (
     <>
-      <DialogTitle id="form-dialog-title">New routine</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        {checkIsNewRoutine() ? "Add new routine" : "Edit routine name"}
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText>Add a name for the new routine</DialogContentText>
+        <DialogContentText>
+          {checkIsNewRoutine()
+            ? "Add a name for the new routine"
+            : "Add a name to edit routine"}
+        </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
           id="name"
-          label="New routine"
+          label={checkIsNewRoutine() ? "New routine" : "Edit routine"}
           type="text"
           fullWidth
           inputRef={textInput}
@@ -40,11 +56,11 @@ const NewRoutineDialog = () => {
           Cancel
         </Button>
         <Button onClick={onInputClick} color="secondary">
-          Add new routine
+          {checkIsNewRoutine() ? "Add new routine" : "Edit routine"}
         </Button>
       </DialogActions>
     </>
   );
 };
 
-export default NewRoutineDialog;
+export default RoutineDialog;

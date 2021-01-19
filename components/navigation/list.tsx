@@ -10,7 +10,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { logOutUser } from "services/auth";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
-import { handleClick, ModalTypeTypes } from "data/modalSlice";
+import { openModal, ModalTypeTypes } from "data/modalSlice";
 import { useDispatch } from "react-redux";
 import { useContext } from "react";
 import { NavContext } from "./index";
@@ -35,7 +35,7 @@ const ListComponent = () => {
   const dispatch = useDispatch();
 
   const dispatchModal = (type: ModalTypeTypes) => {
-    dispatch(handleClick({ type }));
+    dispatch(openModal({ type }));
     if (typeof toogleDrawer !== undefined && toogleDrawer) toogleDrawer();
   };
 

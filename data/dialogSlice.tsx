@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export enum DialogType {
   add_new_routine = "add_new_routine",
+  edit_routine = "edit_routine",
 }
 
 export type DialogTypes = {

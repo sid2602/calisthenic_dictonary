@@ -15,7 +15,7 @@ import {
 import Typography from "@material-ui/core/Typography";
 
 import {
-  handleClick,
+  openModal,
   ModalTypeTypes,
   ModalT,
   handleClose,
@@ -80,7 +80,7 @@ const SingleRoutine = () => {
                   aria-controls="fade-menu"
                   aria-label="settings"
                   onClick={() =>
-                    dispatch(handleClick({ type: ModalTypeTypes.routines }))
+                    dispatch(openModal({ type: ModalTypeTypes.routines }))
                   }
                 >
                   <ArrowBackIcon />

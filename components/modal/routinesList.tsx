@@ -17,7 +17,9 @@ import Grid from "@material-ui/core/Grid";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Fade from "@material-ui/core/Fade";
-
+import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
+import { openDialog, DialogType } from "data/dialogSlice";
+import { openModal, ModalTypeTypes } from "data/modalSlice";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
@@ -54,13 +56,25 @@ const RoutinesList = ({ routine }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
-
+  const { removeRoutine } = useUpdateRoutines();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleEditButtonClick = () => {
+    dispatch(setActiveRoutine({ activeRoutine: routine.id as number }));
+    dispatch(openDialog({ type: DialogType.edit_routine }));
+    dispatch(openModal({ type: ModalTypeTypes.routines }));
+    handleClose();
+  };
+
+  const handleRemoveButtonClick = () => {
+    removeRoutine(routine.id as number);
+    handleClose();
   };
 
   const classes = useStyles();
@@ -84,8 +98,8 @@ const RoutinesList = ({ routine }: Props) => {
             onClose={handleClose}
             TransitionComponent={Fade}
           >
-            <MenuItem onClick={handleClose}>Edit</MenuItem>
-            <MenuItem onClick={handleClose}>Remove</MenuItem>
+            <MenuItem onClick={handleEditButtonClick}>Edit</MenuItem>
+            <MenuItem onClick={handleRemoveButtonClick}>Remove</MenuItem>
           </Menu>
         </CardActions>
 

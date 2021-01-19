@@ -54,7 +54,7 @@ export const ModalSlice = createSlice({
       state.modal.isOpen = false;
       state.modal.addExerciseToRoutineFlag = false;
     },
-    handleClick: (state, action: PayloadAction<ModalHandleClick>) => {
+    openModal: (state, action: PayloadAction<ModalHandleClick>) => {
       state.modal.isOpen = true;
       state.modal.type = action.payload.type;
     },
@@ -89,7 +89,7 @@ export const ModalSlice = createSlice({
 });
 
 export const {
-  handleClick,
+  openModal,
   handleClose,
   setActiveRoutine,
   setRoutines,
