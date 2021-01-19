@@ -24,7 +24,7 @@ import {
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import SingleRoutineList from "./singleRoutineList";
 
-import useSelectExercise from "helpers/useSelectExercise";
+import useSelectExercise from "helpers/modalHooks/useSelectExercise";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

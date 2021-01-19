@@ -9,7 +9,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 import React from "react";
-import { handleClick } from "data/snackbarSlice";
+import { openSnackbar } from "data/snackbarSlice";
 import { SnackbarType } from "data/snackbarSlice";
 import LoginSchema from "schemas/loginSchema";
 import axios from "axios";
@@ -103,7 +103,7 @@ const Login = () => {
   ) => {
     if (errorsEmail || errorsPassword) {
       dispatch(
-        handleClick({
+        openSnackbar({
           type: SnackbarType.error,
           message: `${errorsEmail !== undefined ? errorsEmail : ""}  ${
             errorsPassword !== undefined ? errorsPassword : ""
@@ -117,7 +117,7 @@ const Login = () => {
       values.password.length === 0
     ) {
       dispatch(
-        handleClick({
+        openSnackbar({
           type: SnackbarType.error,
           message: `Email and passord are required`,
         })
@@ -152,14 +152,14 @@ const Login = () => {
                 router.push("/");
 
                 dispatch(
-                  handleClick({
+                  openSnackbar({
                     type: SnackbarType.success,
                     message: "Success log in",
                   })
                 );
               } catch {
                 dispatch(
-                  handleClick({
+                  openSnackbar({
                     type: SnackbarType.error,
                     message: "Wrong Email or Password",
                   })

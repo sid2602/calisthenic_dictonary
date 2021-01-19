@@ -1,7 +1,7 @@
 import { Exercise } from "./exercises";
 
 export type Routine = {
-  id: number;
+  id?: number;
   name: string;
   Exercises: {
     exercises: Exercise[];

@@ -34,7 +34,7 @@ export const SnackBarSlice = createSlice({
     handleClose: (state) => {
       state.snackbar.isOpen = false;
     },
-    handleClick: (state, action: PayloadAction<SnackBarHandleClick>) => {
+    openSnackbar: (state, action: PayloadAction<SnackBarHandleClick>) => {
       state.snackbar.isOpen = true;
       state.snackbar.type = action.payload.type;
       state.snackbar.message = action.payload.message;
@@ -42,6 +42,6 @@ export const SnackBarSlice = createSlice({
   },
 });
 
-export const { handleClick, handleClose } = SnackBarSlice.actions;
+export const { openSnackbar, handleClose } = SnackBarSlice.actions;
 
 export default SnackBarSlice.reducer;

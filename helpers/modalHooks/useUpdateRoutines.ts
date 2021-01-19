@@ -7,6 +7,8 @@ import { UserSlice } from "types/user";
 import { Routine } from "types/routine";
 import { Exercise } from "types/exercises";
 import { setAddExerciseToRoutineFlag } from "data/modalSlice";
+import { handleClose } from "data/dialogSlice";
+import { openSnackbar, SnackbarType } from "data/snackbarSlice";
 const useUpdateRoutines = () => {
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
@@ -41,12 +43,8 @@ const useUpdateRoutines = () => {
     }
   };
 
-  const putRequest = async (newRoutine: Routine) => {
+  const putRequest = async (newRoutines: Routine[]) => {
     if (routines !== null) {
-      const newRoutines = routines.map((routine) =>
-        routine.id === newRoutine.id ? newRoutine : routine
-      );
-
       const { jwt } = parseCookies();
 
       const headers = {
@@ -84,12 +82,28 @@ const useUpdateRoutines = () => {
           },
         };
 
-        const response = await putRequest(newRoutine);
+        const newRoutines = routines.map((routine) =>
+          routine.id === newRoutine.id ? newRoutine : routine
+        );
 
+        const response = await putRequest(newRoutines);
+
+        dispatch(handleClose());
         dispatch(setRoutines({ routines: response }));
+        dispatch(
+          openSnackbar({
+            message: "Successfully removed exercise",
+            type: SnackbarType.success,
+          })
+        );
       }
     } catch (e) {
-      dispatch(setRoutines({ routines: null }));
+      dispatch(
+        openSnackbar({
+          message: "Can't remove exercise",
+          type: SnackbarType.error,
+        })
+      );
     }
   };
 
@@ -104,18 +118,65 @@ const useUpdateRoutines = () => {
             exercises: [...routine.Exercises.exercises, ...selectedExercises],
           },
         };
+        const newRoutines = routines.map((routine) =>
+          routine.id === newRoutine.id ? newRoutine : routine
+        );
 
-        const response = await putRequest(newRoutine);
+        const response = await putRequest(newRoutines);
 
         dispatch(setRoutines({ routines: response }));
         dispatch(setAddExerciseToRoutineFlag({ flag: false }));
+        dispatch(
+          openSnackbar({
+            message: "Successfully added new exercises to routine",
+            type: SnackbarType.success,
+          })
+        );
       }
     } catch (e) {
-      dispatch(setRoutines({ routines: null }));
+      dispatch(
+        openSnackbar({
+          message: "Can't add new exercises to routine",
+          type: SnackbarType.error,
+        })
+      );
     }
   };
 
-  return { getRoutines, removeExercise, addExercisesToRoutine };
+  const addNewRoutine = async (name: string) => {
+    try {
+      if (routines !== null) {
+        const newRoutine = {
+          image: [],
+          Exercises: {
+            exercises: [],
+          },
+          name,
+        };
+
+        const newRoutines = [...routines, newRoutine];
+
+        const response = await putRequest(newRoutines);
+        dispatch(handleClose());
+        dispatch(setRoutines({ routines: response }));
+        dispatch(
+          openSnackbar({
+            message: "Successfully added new routine",
+            type: SnackbarType.success,
+          })
+        );
+      }
+    } catch (e) {
+      dispatch(
+        openSnackbar({
+          message: "Can't add new routine",
+          type: SnackbarType.error,
+        })
+      );
+    }
+  };
+
+  return { getRoutines, removeExercise, addExercisesToRoutine, addNewRoutine };
 };
 
 export default useUpdateRoutines;

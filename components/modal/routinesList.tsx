@@ -91,7 +91,9 @@ const RoutinesList = ({ routine }: Props) => {
 
         <CardContent
           onClick={() =>
-            dispatch(setActiveRoutine({ activeRoutine: routine.id }))
+            dispatch(
+              setActiveRoutine({ activeRoutine: routine.id as number | null })
+            )
           }
           className={classes.cardContent}
         >

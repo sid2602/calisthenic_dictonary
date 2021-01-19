@@ -16,8 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { ExercisesMuscleGroups } from "types/exercises";
 import ExercisesList from "./exerciseslList";
-import useSelectExercise from "helpers/useSelectExercise";
-import useUpdateRoutines from "helpers/useUpdateRoutines";
+import useSelectExercise from "helpers/modalHooks/useSelectExercise";
+import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import store from "data/store";
 import SnackBar from "components/snackBar/snackbar";
 import Modal from "components/modal/modal";
+import Dialog from "components/dialog/dialog";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -15,6 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <GlobalStyle />
         <Layout>
           <SnackBar />
+          <Dialog />
           <Modal />
           <Component {...pageProps} />
         </Layout>

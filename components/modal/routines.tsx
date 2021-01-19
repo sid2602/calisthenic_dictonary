@@ -20,8 +20,8 @@ import Grid from "@material-ui/core/Grid";
 
 import RoutinesList from "./routinesList";
 
-import useUpdateRoutines from "helpers/useUpdateRoutines";
-
+import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
+import { openDialog, DialogType } from "data/dialogSlice";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -55,6 +55,7 @@ const Routines = () => {
 
   useEffect(() => {
     getRoutines();
+    // console.log(routines);
   }, []);
 
   return (
@@ -63,7 +64,14 @@ const Routines = () => {
         <Box className={classes.spaceBetween}>
           <Typography>Routines</Typography>
 
-          <Button color="secondary">Add new routine</Button>
+          <Button
+            color="secondary"
+            onClick={() =>
+              dispatch(openDialog({ type: DialogType.add_new_routine }))
+            }
+          >
+            Add new routine
+          </Button>
         </Box>
       </DialogTitle>
       <DialogContent className={classes.root}>

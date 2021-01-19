@@ -14,12 +14,11 @@ import {
 } from "@material-ui/core";
 
 import DeleteIcon from "@material-ui/icons/Delete";
-import useUpdateRoutines from "helpers/useUpdateRoutines";
+import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listItem: {
-      // background: theme.palette.action.selected,
       borderRadius: "5px",
     },
   })

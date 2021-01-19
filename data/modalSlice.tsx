@@ -52,6 +52,7 @@ export const ModalSlice = createSlice({
   reducers: {
     handleClose: (state) => {
       state.modal.isOpen = false;
+      state.modal.addExerciseToRoutineFlag = false;
     },
     handleClick: (state, action: PayloadAction<ModalHandleClick>) => {
       state.modal.isOpen = true;
