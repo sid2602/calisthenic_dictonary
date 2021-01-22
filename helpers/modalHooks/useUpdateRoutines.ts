@@ -9,6 +9,9 @@ import { Exercise } from "types/exercises";
 import { setAddExerciseToRoutineFlag } from "data/modalSlice";
 import { handleClose } from "data/dialogSlice";
 import { openSnackbar, SnackbarType } from "data/snackbarSlice";
+import { setUser } from "data/userSlice";
+import { User } from "types/user";
+import { userIsLogged } from "services/auth";
 const useUpdateRoutines = () => {
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
@@ -22,24 +25,56 @@ const useUpdateRoutines = () => {
     (state) => state.user
   );
 
+  const createRoutine = async () => {
+    const newRoutine = {
+      user: userState.user?.id,
+      Routine: [],
+    };
+    const { jwt } = parseCookies();
+    const createR = await axios.post(`${api_url}routines`, newRoutine, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    const checkSrc = `${process.env.API_URL}users/me`;
+    const getUser = await axios.get(checkSrc, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    dispatch(setRoutines({ routines: createR.data.Routine }));
+    dispatch(setUser({ user: getUser.data }));
+  };
+
   const getRoutines = async () => {
     try {
-      const { jwt } = parseCookies();
+      if (userState.user?.routine === null) {
+        createRoutine();
+      } else {
+        const { jwt } = parseCookies();
 
-      const { data } = await axios(
-        `${api_url}routines/${userState.user?.routine}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      );
+        const { data } = await axios(
+          `${api_url}routines/${userState.user?.routine}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
 
-      const { Routine } = data;
+        const { Routine } = data;
 
-      dispatch(setRoutines({ routines: Routine }));
+        dispatch(setRoutines({ routines: Routine }));
+      }
     } catch (e) {
-      dispatch(setRoutines({ routines: null }));
+      dispatch(
+        openSnackbar({
+          message: "Can't get routines",
+          type: SnackbarType.error,
+        })
+      );
     }
   };
 

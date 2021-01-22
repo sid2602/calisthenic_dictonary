@@ -1,5 +1,6 @@
 export type User = {
   user: {
+    id: number;
     email: string;
     provider: string;
     confimed: boolean;
@@ -8,6 +9,7 @@ export type User = {
     created_at: string;
     updated_at: string;
     routine: number;
+    trainings: number;
   } | null;
 };
 

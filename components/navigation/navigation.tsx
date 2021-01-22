@@ -11,7 +11,12 @@ import AddIcon from "@material-ui/icons/Add";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Box from "@material-ui/core/Box";
 import { NavContext } from "./index";
-
+import DateFnsUtils from "@date-io/date-fns";
+import "date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -19,7 +24,23 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     background: theme.palette.background.paper,
   },
+  date: {
+    // display: "flex",
+    // width: "100%",
+    // justifyContent: "center",
+    // alignItems: "center",
 
+    "& input": {
+      display: "none",
+    },
+    "& .MuiInput-underline::before": {
+      display: "none",
+    },
+    "& .MuiInputAdornment-root": {
+      height: "100%",
+      marginTop: "7.5px",
+    },
+  },
   menuButton: {
     // [theme.breakpoints.up("lg")]: {
     //   display: "none",
@@ -35,6 +56,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Navigation = () => {
   const classes = useStyles();
+
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
+    new Date()
+  );
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+  };
 
   const value = useContext(NavContext);
   const { toogleDrawer, isActive } = value;
@@ -57,9 +86,17 @@ const Navigation = () => {
         <Box
           className={`${classes.iconContainerRight} ${classes.iconContainer}`}
         >
-          <IconButton>
-            <DateRangeIcon />
-          </IconButton>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              margin="none"
+              id="date-picker-dialog"
+              format="dd/MM/yyyy"
+              value={selectedDate}
+              onChange={handleDateChange}
+              className={classes.date}
+            />
+          </MuiPickersUtilsProvider>
+
           <IconButton>
             <SearchIcon />
           </IconButton>

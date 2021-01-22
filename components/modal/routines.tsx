@@ -55,7 +55,6 @@ const Routines = () => {
 
   useEffect(() => {
     getRoutines();
-    // console.log(routines);
   }, []);
 
   return (
@@ -82,10 +81,17 @@ const Routines = () => {
           alignItems="center"
           spacing={2}
         >
-          {routines !== null && routines.length > 0 ? (
-            routines?.map((routine) => (
-              <RoutinesList routine={routine} key={routine.name + routine.id} />
-            ))
+          {routines !== null ? (
+            routines.length > 0 ? (
+              routines?.map((routine) => (
+                <RoutinesList
+                  routine={routine}
+                  key={routine.name + routine.id}
+                />
+              ))
+            ) : (
+              <h2>There is no routine</h2>
+            )
           ) : (
             <CircularProgress size={50} />
           )}
