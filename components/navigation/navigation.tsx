@@ -17,6 +17,9 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import { useDispatch, useSelector } from "react-redux";
+import { handleDateChange, DateT } from "data/dateSlice";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -25,11 +28,6 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.paper,
   },
   date: {
-    // display: "flex",
-    // width: "100%",
-    // justifyContent: "center",
-    // alignItems: "center",
-
     "& input": {
       display: "none",
     },
@@ -57,12 +55,14 @@ const useStyles = makeStyles((theme) => ({
 const Navigation = () => {
   const classes = useStyles();
 
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date()
-  );
+  const DateState = useSelector<DateT, DateT["date"]>((state) => state.date);
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
+  const dispatch = useDispatch();
+  const handleChange = (date: Date | null) => {
+    if (date) {
+      const stringifyDate = date.toISOString().slice(0, 10);
+      dispatch(handleDateChange({ date: stringifyDate }));
+    }
   };
 
   const value = useContext(NavContext);
@@ -91,15 +91,15 @@ const Navigation = () => {
               margin="none"
               id="date-picker-dialog"
               format="dd/MM/yyyy"
-              value={selectedDate}
-              onChange={handleDateChange}
+              value={DateState.date.date}
+              onChange={handleChange}
               className={classes.date}
             />
           </MuiPickersUtilsProvider>
 
-          <IconButton>
+          {/* <IconButton>
             <SearchIcon />
-          </IconButton>
+          </IconButton> */}
           <IconButton>
             <AddIcon />
           </IconButton>

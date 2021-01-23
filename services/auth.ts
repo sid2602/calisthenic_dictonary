@@ -12,6 +12,7 @@ export const setUser = (jwt: string) => {
 
 export const logOutUser = () => {
   destroyCookie(null, "jwt");
+  window.location.reload(true);
 };
 
 export const userIsLogged = async (context: GetServerSidePropsContext) => {
@@ -30,7 +31,6 @@ export const userIsLogged = async (context: GetServerSidePropsContext) => {
 
       return {
         user: data as User,
-        jwt,
       };
     }
 

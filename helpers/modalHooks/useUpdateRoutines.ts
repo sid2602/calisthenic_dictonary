@@ -31,21 +31,21 @@ const useUpdateRoutines = () => {
       Routine: [],
     };
     const { jwt } = parseCookies();
-    const createR = await axios.post(`${api_url}routines`, newRoutine, {
+    const { data } = await axios.post(`${api_url}routines`, newRoutine, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     });
 
-    const checkSrc = `${process.env.API_URL}users/me`;
-    const getUser = await axios.get(checkSrc, {
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
+    // const checkSrc = `${process.env.API_URL}users/me`;
+    // const getUser = await axios.get(checkSrc, {
+    //   headers: {
+    //     Authorization: `Bearer ${jwt}`,
+    //   },
+    // });
 
-    dispatch(setRoutines({ routines: createR.data.Routine }));
-    dispatch(setUser({ user: getUser.data }));
+    dispatch(setRoutines({ routines: data.Routine }));
+    dispatch(setUser({ user: data.user }));
   };
 
   const getRoutines = async () => {
