@@ -19,12 +19,13 @@ import {
   ModalTypeTypes,
   ModalT,
   handleClose,
-  setAddExerciseToRoutineFlag,
+  setFlags,
 } from "data/modalSlice";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import SingleRoutineList from "./singleRoutineList";
 
 import useSelectExercise from "helpers/modalHooks/useSelectExercise";
+import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +61,12 @@ const SingleRoutine = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const { routines, activeRoutine } = ModalState.modal;
+  const {
+    routines,
+    activeRoutine,
+    addRoutineToTrainingFlag,
+    addExerciseToRoutineFlag,
+  } = ModalState.modal;
 
   const { selectExercise, selectedExercises } = useSelectExercise(
     true,
@@ -68,6 +74,14 @@ const SingleRoutine = () => {
       ? routines[activeRoutine].Exercises.exercises
       : []
   );
+
+  const { addExercisesToTraining } = useUpdateTraining();
+
+  const onClickAddButton = () => {
+    if (addRoutineToTrainingFlag || addExerciseToRoutineFlag === false) {
+      addExercisesToTraining(selectedExercises);
+    }
+  };
 
   return (
     <>
@@ -90,7 +104,7 @@ const SingleRoutine = () => {
               <Button
                 color="secondary"
                 onClick={() =>
-                  dispatch(setAddExerciseToRoutineFlag({ flag: true }))
+                  dispatch(setFlags({ addExerciseToRoutineFlag: true }))
                 }
               >
                 Add exercise to routine
@@ -112,7 +126,9 @@ const SingleRoutine = () => {
               Cancel
             </Button>
             {selectedExercises.length > 0 && (
-              <Button color="secondary">Add</Button>
+              <Button color="secondary" onClick={onClickAddButton}>
+                Add
+              </Button>
             )}
           </DialogActions>
         </>

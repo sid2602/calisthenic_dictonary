@@ -18,6 +18,7 @@ import { ExercisesMuscleGroups } from "types/exercises";
 import ExercisesList from "./exerciseslList";
 import useSelectExercise from "helpers/modalHooks/useSelectExercise";
 import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
+import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -42,7 +43,10 @@ const Exercises = () => {
     (state) => state.modal
   );
 
-  const { addExerciseToRoutineFlag } = ModalState.modal;
+  const {
+    addExerciseToRoutineFlag,
+    addExerciseToTrainingFlag,
+  } = ModalState.modal;
 
   const [exercisesGroups, setExercisesGroups] = useState<
     ExercisesMuscleGroups[] | null
@@ -52,10 +56,13 @@ const Exercises = () => {
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
   const { addExercisesToRoutine } = useUpdateRoutines();
+  const { addExercisesToTraining } = useUpdateTraining();
 
   const onClickAddButton = () => {
     if (addExerciseToRoutineFlag) {
       addExercisesToRoutine(selectedExercises);
+    } else if (addExerciseToTrainingFlag || !addExerciseToRoutineFlag) {
+      addExercisesToTraining(selectedExercises);
     }
   };
 

@@ -6,7 +6,7 @@ import axios from "axios";
 import { UserSlice } from "types/user";
 import { Routine } from "types/routine";
 import { Exercise } from "types/exercises";
-import { setAddExerciseToRoutineFlag } from "data/modalSlice";
+import { setFlags } from "data/modalSlice";
 import { handleClose } from "data/dialogSlice";
 import { openSnackbar, SnackbarType } from "data/snackbarSlice";
 import { setUser } from "data/userSlice";
@@ -36,13 +36,6 @@ const useUpdateRoutines = () => {
         Authorization: `Bearer ${jwt}`,
       },
     });
-
-    // const checkSrc = `${process.env.API_URL}users/me`;
-    // const getUser = await axios.get(checkSrc, {
-    //   headers: {
-    //     Authorization: `Bearer ${jwt}`,
-    //   },
-    // });
 
     dispatch(setRoutines({ routines: data.Routine }));
     dispatch(setUser({ user: data.user }));
@@ -160,7 +153,7 @@ const useUpdateRoutines = () => {
         const response = await putRequest(newRoutines);
 
         dispatch(setRoutines({ routines: response }));
-        dispatch(setAddExerciseToRoutineFlag({ flag: false }));
+        dispatch(setFlags({ addExerciseToRoutineFlag: false }));
         dispatch(
           openSnackbar({
             message: "Successfully added new exercises to routine",

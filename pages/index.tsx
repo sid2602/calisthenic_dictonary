@@ -63,7 +63,7 @@ const Home = ({ user }: User) => {
   }, []);
 
   useEffect(() => {
-    if (user) getTrainings(user.trainings);
+    if (user?.trainings) getTrainings(user.trainings);
   }, [user?.trainings]);
 
   return (

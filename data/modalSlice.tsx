@@ -13,6 +13,8 @@ export type ModalTypes = {
     activeRoutine: number | null;
     routines: Routine[] | null;
     addExerciseToRoutineFlag: boolean;
+    addExerciseToTrainingFlag: boolean;
+    addRoutineToTrainingFlag: boolean;
   };
 };
 
@@ -29,7 +31,9 @@ export type SetActiveRoutineType = {
 };
 
 export type SetAddExerciseToRoutine = {
-  flag: boolean;
+  addExerciseToRoutineFlag?: boolean;
+  addExerciseToTrainingFlag?: boolean;
+  addRoutineToTrainingFlag?: boolean;
 };
 
 export type ModalT = {
@@ -43,6 +47,8 @@ const initialState = {
     activeRoutine: null,
     routines: null,
     addExerciseToRoutineFlag: false,
+    addExerciseToTrainingFlag: false,
+    addRoutineToTrainingFlag: false,
   },
 } as ModalTypes;
 
@@ -53,6 +59,8 @@ export const ModalSlice = createSlice({
     handleClose: (state) => {
       state.modal.isOpen = false;
       state.modal.addExerciseToRoutineFlag = false;
+      state.modal.addExerciseToTrainingFlag = false;
+      state.modal.addRoutineToTrainingFlag = false;
     },
     openModal: (state, action: PayloadAction<ModalHandleClick>) => {
       state.modal.isOpen = true;
@@ -72,17 +80,35 @@ export const ModalSlice = createSlice({
         state.modal.type = ModalTypeTypes.singleRoutine;
       }
     },
-    setAddExerciseToRoutineFlag: (
-      state,
-      action: PayloadAction<SetAddExerciseToRoutine>
-    ) => {
-      const { flag } = action.payload;
-      state.modal.addExerciseToRoutineFlag = flag;
+    setFlags: (state, action: PayloadAction<SetAddExerciseToRoutine>) => {
+      const {
+        addExerciseToRoutineFlag,
+        addExerciseToTrainingFlag,
+        addRoutineToTrainingFlag,
+      } = action.payload;
 
-      if (flag === true) {
-        state.modal.type = ModalTypeTypes.exercises;
-      } else {
-        state.modal.type = ModalTypeTypes.singleRoutine;
+      if (addExerciseToRoutineFlag) {
+        state.modal.addExerciseToRoutineFlag = addExerciseToRoutineFlag;
+
+        if (addExerciseToRoutineFlag === true) {
+          state.modal.type = ModalTypeTypes.exercises;
+        } else {
+          state.modal.type = ModalTypeTypes.singleRoutine;
+        }
+      } else if (addExerciseToTrainingFlag) {
+        state.modal.addExerciseToTrainingFlag = addExerciseToTrainingFlag;
+        state.modal.addRoutineToTrainingFlag = false;
+        if (addExerciseToTrainingFlag === true) {
+          state.modal.type = ModalTypeTypes.exercises;
+          state.modal.isOpen = true;
+        }
+      } else if (addRoutineToTrainingFlag) {
+        state.modal.addRoutineToTrainingFlag = addRoutineToTrainingFlag;
+        state.modal.addExerciseToTrainingFlag = false;
+        if (addRoutineToTrainingFlag === true) {
+          state.modal.isOpen = true;
+          state.modal.type = ModalTypeTypes.routines;
+        }
       }
     },
   },
@@ -93,7 +119,7 @@ export const {
   handleClose,
   setActiveRoutine,
   setRoutines,
-  setAddExerciseToRoutineFlag,
+  setFlags,
 } = ModalSlice.actions;
 
 export default ModalSlice.reducer;

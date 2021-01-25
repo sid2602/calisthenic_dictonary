@@ -11,7 +11,7 @@ export type TrainingHandleChange = {
 };
 
 export type TrainingT = {
-  date: TrainingTypes;
+  training: TrainingTypes;
 };
 
 const initialState = {
