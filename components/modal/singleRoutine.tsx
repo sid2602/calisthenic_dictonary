@@ -83,6 +83,8 @@ const SingleRoutine = () => {
     }
   };
 
+  // const {exercises} =routines[activeRoutine]!.Exercises
+
   return (
     <>
       {routines !== null && activeRoutine !== null ? (
@@ -112,14 +114,15 @@ const SingleRoutine = () => {
             </Box>
           </DialogTitle>
           <DialogContent className={classes.root}>
-            {routines[activeRoutine]?.Exercises.exercises.map((exercise) => (
-              <SingleRoutineList
-                key={exercise.id + exercise.name}
-                exercise={exercise}
-                selectedExercises={selectedExercises}
-                selectExercise={selectExercise}
-              />
-            ))}
+            {routines[activeRoutine]?.Exercises.exercises &&
+              routines[activeRoutine]?.Exercises.exercises.map((exercise) => (
+                <SingleRoutineList
+                  key={exercise.id + exercise.name}
+                  exercise={exercise}
+                  selectedExercises={selectedExercises}
+                  selectExercise={selectExercise}
+                />
+              ))}
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={() => dispatch(handleClose())}>

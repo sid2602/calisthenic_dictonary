@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setRoutines, ModalT, ModalTypeTypes } from "data/modalSlice";
+import {
+  setRoutines,
+  ModalT,
+  ModalTypeTypes,
+  openModal,
+} from "data/modalSlice";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import { UserSlice } from "types/user";
@@ -139,13 +144,25 @@ const useUpdateRoutines = () => {
     try {
       if (routines !== null && activeRoutine !== null) {
         const routine = routines[activeRoutine];
+        let newRoutine: Routine;
 
-        const newRoutine = {
-          ...routine,
-          Exercises: {
-            exercises: [...routine.Exercises.exercises, ...selectedExercises],
-          },
-        };
+        const { exercises } = routines[activeRoutine].Exercises;
+        if (exercises) {
+          newRoutine = {
+            ...routine,
+            Exercises: {
+              exercises: [...routine.Exercises.exercises, ...selectedExercises],
+            },
+          };
+        } else {
+          newRoutine = {
+            ...routine,
+            Exercises: {
+              exercises: [...selectedExercises],
+            },
+          };
+        }
+
         const newRoutines = routines.map((routine) =>
           routine.id === newRoutine.id ? newRoutine : routine
         );
@@ -154,6 +171,7 @@ const useUpdateRoutines = () => {
 
         dispatch(setRoutines({ routines: response }));
         dispatch(setFlags({ addExerciseToRoutineFlag: false }));
+        dispatch(openModal({ type: ModalTypeTypes.singleRoutine }));
         dispatch(
           openSnackbar({
             message: "Successfully added new exercises to routine",
@@ -185,6 +203,7 @@ const useUpdateRoutines = () => {
         const newRoutines = [...routines, newRoutine];
 
         const response = await putRequest(newRoutines);
+
         dispatch(handleClose());
         dispatch(setRoutines({ routines: response }));
         dispatch(

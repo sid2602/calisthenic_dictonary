@@ -21,7 +21,18 @@ const useUpdateTraining = () => {
 
   const { user } = userState;
   const { date } = DateState.date;
-  const { training } = trainingState.training;
+  const { trainings } = trainingState.training;
+
+  const getTodayTraining = () => {
+    const todayTraining = trainings.filter(
+      (item) => item.date === (date as string)
+    );
+
+    if (todayTraining.length > 0) {
+      return todayTraining[0].singleSet;
+    }
+    return null;
+  };
 
   const dispatch = useDispatch();
 
@@ -58,8 +69,8 @@ const useUpdateTraining = () => {
       const { data } = await axios.get(`${api_url}trainings/${trainingId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-
-      dispatch(setTraining({ training: data.training }));
+      // console.log(data.trainings);
+      dispatch(setTraining({ trainings: data.trainings }));
     } catch (e) {
       dispatch(
         openSnackbar({
@@ -80,19 +91,19 @@ const useUpdateTraining = () => {
     const { data } = await axios.put(
       `${api_url}trainings/${userState.user?.trainings}`,
       {
-        training: newTrainings,
+        trainings: newTrainings,
       },
       {
         headers,
       }
     );
 
-    return data.training;
+    return data.trainings;
   };
 
   const addExercisesToTraining = async (selectedExercises: Exercise[]) => {
     try {
-      const indexOfTraining = training
+      const indexOfTraining = trainings
         .map((item) => item.date)
         .indexOf(date as string);
 
@@ -101,34 +112,33 @@ const useUpdateTraining = () => {
       if (indexOfTraining === -1) {
         copyOfTraining = {
           date: date as string,
-          Exercises: {
-            exercises: [],
-          },
+          singleSet: [],
         };
       } else {
-        copyOfTraining = training[indexOfTraining];
+        copyOfTraining = trainings[indexOfTraining];
       }
+
+      const newSet = selectedExercises.map((item) => ({
+        exercise: item,
+        quantity: [],
+      }));
+
       const copyOfSingleTraining = {
         ...copyOfTraining,
-        Exercises: {
-          exercises: [
-            ...copyOfTraining.Exercises.exercises,
-            ...selectedExercises,
-          ],
-        },
+        singleSet: [...copyOfTraining.singleSet, ...newSet],
       };
 
       let newTrainings;
 
       if (indexOfTraining > -1)
-        newTrainings = training.map((item, index) =>
+        newTrainings = trainings.map((item, index) =>
           index === indexOfTraining ? copyOfSingleTraining : item
         );
-      else newTrainings = [...training, copyOfSingleTraining];
+      else newTrainings = [...trainings, copyOfSingleTraining];
 
       const response = await putRequest(newTrainings);
 
-      dispatch(setTraining({ training: response }));
+      dispatch(setTraining({ trainings: response }));
       dispatch(
         openSnackbar({
           message: "Successfully added exercises to training",
@@ -152,6 +162,7 @@ const useUpdateTraining = () => {
     getTrainings,
     addExercisesToTraining,
     date,
+    getTodayTraining,
   };
 };
 

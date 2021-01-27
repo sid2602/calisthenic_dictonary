@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Training } from "types/training";
 export type TrainingTypes = {
   training: {
-    training: Training[];
+    trainings: Training[];
   };
 };
 
 export type TrainingHandleChange = {
-  training: Training[];
+  trainings: Training[];
 };
 
 export type TrainingT = {
@@ -16,7 +16,7 @@ export type TrainingT = {
 
 const initialState = {
   training: {
-    training: [],
+    trainings: [],
   },
 } as TrainingTypes;
 
@@ -25,7 +25,7 @@ export const TrainingSlice = createSlice({
   initialState,
   reducers: {
     setTraining: (state, action: PayloadAction<TrainingHandleChange>) => {
-      state.training.training = action.payload.training;
+      state.training.trainings = action.payload.trainings;
     },
   },
 });

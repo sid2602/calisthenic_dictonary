@@ -8,6 +8,15 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
+import Box from "@material-ui/core/Box";
+import { DateT } from "data/dateSlice";
+import TrainingExercise from "components/training/trainingExercise";
+import Exercises from "components/modal/exercises";
+import List from "@material-ui/core/List";
+import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+
 const useStyles = makeStyles((theme) => ({
   placeholder: {
     position: "absolute",
@@ -41,16 +50,24 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  container: {
+    margin: "2rem auto ",
+    maxWidth: 800,
+  },
 }));
-
-import Box from "@material-ui/core/Box";
-import { DateT } from "data/dateSlice";
 
 const Home = ({ user }: User) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const { createTrainingComponent, getTrainings, date } = useUpdateTraining();
+  const {
+    createTrainingComponent,
+    getTrainings,
+    date,
+    getTodayTraining,
+  } = useUpdateTraining();
+
+  const todayTraining = getTodayTraining();
 
   useEffect(() => {
     const copyOfUser = {
@@ -71,10 +88,18 @@ const Home = ({ user }: User) => {
       <Box className={classes.date}>
         <Box component="h1">{date}</Box>
       </Box>
-      <Box className={classes.placeholder}>
-        <img src="img/placeholder.png" alt="placeholder" />
-        <Box component="h2">Add Exercises to training</Box>
-      </Box>
+      {todayTraining ? (
+        <List className={classes.container} aria-label="main mailbox folders">
+          {todayTraining.map((item) => (
+            <TrainingExercise key={item.id} singleSet={item} />
+          ))}
+        </List>
+      ) : (
+        <Box className={classes.placeholder}>
+          <img src="img/placeholder.png" alt="placeholder" />
+          <Box component="h2">Add Exercises to training</Box>
+        </Box>
+      )}
     </>
   );
 };

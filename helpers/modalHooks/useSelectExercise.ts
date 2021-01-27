@@ -16,7 +16,7 @@ const useSelectExercise = (selectAll: boolean, exercises: Exercise[]) => {
   };
 
   useEffect(() => {
-    if (selectAll) {
+    if (selectAll && exercises) {
       setSelectedExercises([...selectedExercises, ...exercises]);
     }
   }, []);
