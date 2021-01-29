@@ -1,4 +1,4 @@
-import { Exercise } from "types/exercises";
+import { Exercise, VariantType } from "types/exercises";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
@@ -11,6 +11,9 @@ import { SingleSet } from "types/training";
 import { useState } from "react";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
+import { openDialog, DialogType } from "data/dialogSlice";
+import { useDispatch } from "react-redux";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listItem: {
@@ -29,11 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       textAlign: "center",
-      //   marginRight: "0.5rem",
 
       "& span": {
         fontSize: "0.6rem",
-        // display: "inline",
+
         width: "50px",
         marginBottom: "0.3rem",
       },
@@ -41,14 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
     seriesContainer: {
       marginLeft: "2rem",
       display: "flex",
-      //   justifyContent: "center",
+
       width: "80%",
     },
     button: {
       background: "none",
       border: "none",
       color: "white",
-      cursor: "hover",
+      cursor: "pointer",
       outline: "none",
     },
   })
@@ -59,22 +61,39 @@ type Props = {
 };
 
 type SeriesComponentProps = {
-  quantity?: string;
+  quantity?: number;
   index?: number;
   newSeries: boolean;
+  variant?: VariantType;
+  singleSetID?: number;
 };
 const SeriesComponent = ({
   quantity,
   index,
   newSeries,
+  variant,
+  singleSetID,
 }: SeriesComponentProps) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   return (
     <Box className={classes.series}>
       {newSeries ? (
         <>
           <Box component="span">new series </Box>
-          <Box component="button" className={classes.button}>
+          <Box
+            component="button"
+            className={classes.button}
+            onClick={() =>
+              dispatch(
+                openDialog({
+                  type: DialogType.add_serie,
+                  variant,
+                  activeSingleSet: singleSetID,
+                })
+              )
+            }
+          >
             +
           </Box>
         </>
@@ -89,10 +108,14 @@ const SeriesComponent = ({
 };
 
 const TrainingExercise = ({ singleSet }: Props) => {
+  const { name, variant } = singleSet.exercise;
+  // {
+  //   console.log(singleSet);
+  // }
   const classes = useStyles();
   return (
     <ListItem className={classes.listItem}>
-      <ListItemText primary={singleSet.exercise.name} />
+      <ListItemText primary={name} />
       <Box className={classes.seriesContainer}>
         {singleSet.quantity.map((item, index) => (
           <SeriesComponent
@@ -103,7 +126,11 @@ const TrainingExercise = ({ singleSet }: Props) => {
           />
         ))}
 
-        <SeriesComponent newSeries={true} />
+        <SeriesComponent
+          newSeries={true}
+          variant={variant}
+          singleSetID={singleSet.id}
+        />
       </Box>
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="comments">

@@ -3,6 +3,8 @@ import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
 import { DialogT, handleClose, DialogType } from "data/dialogSlice";
 import RoutineDialog from "./routineDialog/routineDialog";
+import SeriesDialog from "./seriesDialog/seriesDialog";
+
 const DialogComponent = () => {
   const dispatch = useDispatch();
   const DialogState = useSelector<DialogT, DialogT["dialog"]>(
@@ -21,7 +23,9 @@ const DialogComponent = () => {
         {type === DialogType.add_new_routine ||
         type === DialogType.edit_routine ? (
           <RoutineDialog type={type} />
-        ) : null}
+        ) : (
+          <SeriesDialog />
+        )}
       </Dialog>
     </div>
   );

@@ -6,10 +6,12 @@ import { setUser } from "data/userSlice";
 import { DateT } from "data/dateSlice";
 import { openSnackbar, SnackbarType } from "data/snackbarSlice";
 import { setTraining, TrainingT } from "data/trainingSlice";
-import { Exercise } from "types/exercises";
+import { Exercise, VariantType } from "types/exercises";
 import { Training } from "types/training";
 import { Routine } from "types/routine";
 import { handleClose } from "data/modalSlice";
+import { State } from "components/dialog/seriesDialog/seriesDialog";
+import { DialogT, handleClose as dialogHandleClose } from "data/dialogSlice";
 const useUpdateTraining = () => {
   const trainingState = useSelector<TrainingT, TrainingT["training"]>(
     (state) => state.training
@@ -18,11 +20,14 @@ const useUpdateTraining = () => {
     (state) => state.user
   );
   const DateState = useSelector<DateT, DateT["date"]>((state) => state.date);
+  const DialogState = useSelector<DialogT, DialogT["dialog"]>(
+    (state) => state.dialog
+  );
 
   const { user } = userState;
   const { date } = DateState.date;
   const { trainings } = trainingState.training;
-
+  const { activeSingleSet, exerciseVariant } = DialogState.dialog;
   const getTodayTraining = () => {
     const todayTraining = trainings.filter(
       (item) => item.date === (date as string)
@@ -69,7 +74,7 @@ const useUpdateTraining = () => {
       const { data } = await axios.get(`${api_url}trainings/${trainingId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-      // console.log(data.trainings);
+
       dispatch(setTraining({ trainings: data.trainings }));
     } catch (e) {
       dispatch(
@@ -157,12 +162,114 @@ const useUpdateTraining = () => {
     }
   };
 
+  const addSeries = async (values: State) => {
+    let badValues = false;
+
+    try {
+      const parsedValues = {
+        kg: parseInt(values.kg),
+        minutes: parseInt(values.minutes),
+        seconds: parseInt(values.seconds),
+        reps: parseInt(values.rep),
+      };
+
+      const { kg, minutes, seconds, reps } = parsedValues;
+      if (kg > 0 || minutes > 0 || seconds > 0 || reps > 0) {
+        const actualTraining = trainings.filter(
+          (item) => item.date === date
+        )[0];
+
+        const actualSingleSet = actualTraining.singleSet.filter(
+          (item) => item.id === activeSingleSet
+        )[0];
+
+        let newSeries;
+
+        if (seconds > 0 && minutes > 0) {
+          newSeries = {
+            quantity: `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`,
+            variant: VariantType.minSec,
+          };
+        } else if (minutes > 0) {
+          newSeries = {
+            quantity: `${minutes}`,
+            variant: VariantType.minutes,
+          };
+        } else if (seconds > 0) {
+          newSeries = {
+            quantity: `${seconds}`,
+            variant: VariantType.seconds,
+          };
+        } else if (reps > 0) {
+          newSeries = {
+            quantity: `${reps}`,
+            variant: VariantType.rep,
+          };
+        }
+
+        if (kg > 0) {
+          newSeries = {
+            ...newSeries,
+            kg,
+          };
+        } else {
+          newSeries = {
+            ...newSeries,
+            kg: 0,
+          };
+        }
+
+        const updatedActualSingleSet = {
+          ...actualSingleSet,
+          quantity: [...actualSingleSet.quantity, newSeries],
+        };
+
+        const newTraining = {
+          ...actualTraining,
+          singleSet: [
+            ...actualTraining.singleSet.map((item) =>
+              item.id === updatedActualSingleSet.id
+                ? updatedActualSingleSet
+                : item
+            ),
+          ],
+        };
+        const newTrainings = trainings.map((item) =>
+          item.id === newTraining.id ? newTraining : item
+        );
+
+        const response = await putRequest(newTrainings as Training[]);
+        dispatch(setTraining({ trainings: response }));
+        dispatch(dialogHandleClose());
+        dispatch(
+          openSnackbar({
+            message: "Successfully added exercises to training",
+            type: SnackbarType.success,
+          })
+        );
+      } else {
+        badValues = true;
+        throw new Error();
+      }
+    } catch (e) {
+      dispatch(
+        openSnackbar({
+          message: `${
+            badValues ? "use only numbers!" : "Can't add new series"
+          }`,
+          type: SnackbarType.error,
+        })
+      );
+    }
+  };
+
   return {
     createTrainingComponent,
     getTrainings,
     addExercisesToTraining,
     date,
     getTodayTraining,
+    addSeries,
   };
 };
 

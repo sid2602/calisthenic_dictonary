@@ -1,5 +1,4 @@
-import { Exercise } from "./exercises";
-
+import { Exercise, VariantType } from "./exercises";
 export type Training = {
   id?: number;
   date: string;
@@ -14,5 +13,7 @@ export type SingleSet = {
 
 export type Quantity = {
   id?: number;
-  quantity: string;
+  quantity: number;
+  variant: VariantType;
+  kg: number;
 };
