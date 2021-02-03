@@ -9,7 +9,7 @@ import Container from "@material-ui/core/Container";
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
-    height: `calc(100vh - 64px)`,
+    minHeight: `calc(100vh - 64px)`,
   },
 }));
 

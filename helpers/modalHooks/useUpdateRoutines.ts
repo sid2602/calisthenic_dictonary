@@ -13,13 +13,14 @@ import { Routine } from "types/routine";
 import { Exercise } from "types/exercises";
 import { setFlags } from "data/modalSlice";
 import { handleClose } from "data/dialogSlice";
-import { openSnackbar, SnackbarType } from "data/snackbarSlice";
+import { SnackbarType } from "data/snackbarSlice";
 import { setUser } from "data/userSlice";
-import { User } from "types/user";
-import { userIsLogged } from "services/auth";
+
+import useSnackbar from "helpers/snackbarHooks/useSnackbar";
 const useUpdateRoutines = () => {
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
+  const { showSnackbar } = useSnackbar();
 
   const ModalState = useSelector<ModalT, ModalT["modal"]>(
     (state) => state.modal
@@ -67,12 +68,7 @@ const useUpdateRoutines = () => {
         dispatch(setRoutines({ routines: Routine }));
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: "Can't get routines",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.error, "Can't get routines");
     }
   };
 
@@ -123,20 +119,10 @@ const useUpdateRoutines = () => {
 
         dispatch(handleClose());
         dispatch(setRoutines({ routines: response }));
-        dispatch(
-          openSnackbar({
-            message: "Successfully removed exercise",
-            type: SnackbarType.success,
-          })
-        );
+        showSnackbar(SnackbarType.success, "Successfully removed exercise");
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: "Can't remove exercise",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.error, "Can't remove exercise");
     }
   };
 
@@ -172,20 +158,13 @@ const useUpdateRoutines = () => {
         dispatch(setRoutines({ routines: response }));
         dispatch(setFlags({ addExerciseToRoutineFlag: false }));
         dispatch(openModal({ type: ModalTypeTypes.singleRoutine }));
-        dispatch(
-          openSnackbar({
-            message: "Successfully added new exercises to routine",
-            type: SnackbarType.success,
-          })
+        showSnackbar(
+          SnackbarType.success,
+          "Successfully added new exercises to routine"
         );
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: "Can't add new exercises to routine",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.error, "Can't add new exercises to routine");
     }
   };
 
@@ -206,24 +185,14 @@ const useUpdateRoutines = () => {
 
         dispatch(handleClose());
         dispatch(setRoutines({ routines: response }));
-        dispatch(
-          openSnackbar({
-            message: "Successfully added new routine",
-            type: SnackbarType.success,
-          })
-        );
+        showSnackbar(SnackbarType.success, "Successfully added new routine");
       } else {
         throw new Error();
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: ` ${
-            name === "" ? "Add a name for the routine" : "Can't add new routine"
-          }`,
-          type: SnackbarType.error,
-        })
-      );
+      const message =
+        name === "" ? "Add a name for the routine" : "Can't add new routine";
+      showSnackbar(SnackbarType.error, message);
     }
   };
 
@@ -236,21 +205,10 @@ const useUpdateRoutines = () => {
 
         const response = await putRequest(newRoutines);
         dispatch(setRoutines({ routines: response }));
-        dispatch(setRoutines({ routines: response }));
-        dispatch(
-          openSnackbar({
-            message: "Successfully removed exercise",
-            type: SnackbarType.success,
-          })
-        );
+        showSnackbar(SnackbarType.success, "Successfully removed exercise");
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: "Can't remove routine",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.error, "Can't remove routine");
     }
   };
 
@@ -271,24 +229,14 @@ const useUpdateRoutines = () => {
         const response = await putRequest(newRoutines);
         dispatch(handleClose());
         dispatch(setRoutines({ routines: response }));
-        dispatch(
-          openSnackbar({
-            message: "successfully rename",
-            type: SnackbarType.success,
-          })
-        );
+        showSnackbar(SnackbarType.success, "Successfully rename");
       } else {
         throw new Error();
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: ` ${
-            name === "" ? "Add a name for the routine" : "Can't edit routine"
-          }`,
-          type: SnackbarType.error,
-        })
-      );
+      const message =
+        name === "" ? "Add a name for the routine" : "Can't edit routine";
+      showSnackbar(SnackbarType.error, name);
     }
   };
 

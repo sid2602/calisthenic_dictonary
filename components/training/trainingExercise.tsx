@@ -7,8 +7,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { ListItemSecondaryAction, IconButton } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
-import { SingleSet } from "types/training";
-import { useState } from "react";
+import { SingleSet, Quantity } from "types/training";
+import { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import { openDialog, DialogType } from "data/dialogSlice";
@@ -26,18 +26,24 @@ const useStyles = makeStyles((theme: Theme) =>
         display: "block",
         width: "200px",
       },
+
+      [theme.breakpoints.down("sm")]: {
+        display: "flex",
+        flexDirection: "column",
+      },
     },
 
     series: {
       display: "flex",
       flexDirection: "column",
-      textAlign: "center",
-
+      padding: "0 0.4rem",
       "& span": {
         fontSize: "0.6rem",
-
+        textAlgin: "center",
         width: "50px",
-        marginBottom: "0.3rem",
+        [theme.breakpoints.down("sm")]: {
+          margin: "1rem 0 0.4rem 0",
+        },
       },
     },
     seriesContainer: {
@@ -45,6 +51,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
 
       width: "80%",
+      [theme.breakpoints.down("sm")]: {
+        width: "100%",
+        flexWrap: "wrap",
+      },
     },
     button: {
       background: "none",
@@ -61,7 +71,7 @@ type Props = {
 };
 
 type SeriesComponentProps = {
-  quantity?: number;
+  quantity?: Quantity;
   index?: number;
   newSeries: boolean;
   variant?: VariantType;
@@ -76,6 +86,27 @@ const SeriesComponent = ({
 }: SeriesComponentProps) => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (quantity) {
+      const kg = `${quantity.kg > 0 ? ` x ${quantity.kg}kg` : ""}`;
+
+      if (quantity.variant === VariantType.rep) {
+        setMessage(quantity.quantity + kg);
+      } else if (quantity.variant === VariantType.seconds) {
+        setMessage(quantity.quantity + "s " + kg);
+      } else if (quantity.variant === VariantType.minutes) {
+        setMessage(quantity.quantity + "m " + kg);
+      } else if (quantity.variant === VariantType.minSec) {
+        const minutes = Math.floor(quantity.quantity / 60);
+        const seconds = quantity.quantity - minutes * 60;
+        const convertedSeconds = seconds > 10 ? seconds : "0" + seconds;
+        setMessage(minutes + "m :" + convertedSeconds + "s" + kg);
+      }
+    }
+  }, []);
+
   return (
     <Box className={classes.series}>
       {newSeries ? (
@@ -100,7 +131,7 @@ const SeriesComponent = ({
       ) : (
         <>
           <Box component="span">series {(index as number) + 1}</Box>
-          <Box>{quantity}</Box>
+          <Box>{message}</Box>
         </>
       )}
     </Box>
@@ -109,28 +140,29 @@ const SeriesComponent = ({
 
 const TrainingExercise = ({ singleSet }: Props) => {
   const { name, variant } = singleSet.exercise;
-  // {
-  //   console.log(singleSet);
-  // }
   const classes = useStyles();
   return (
     <ListItem className={classes.listItem}>
-      <ListItemText primary={name} />
+      <ListItemText
+        primary={name}
+        style={{ textAlign: "center", marginBottom: "1rem" }}
+      />
       <Box className={classes.seriesContainer}>
         {singleSet.quantity.map((item, index) => (
           <SeriesComponent
             key={item.id}
-            quantity={item.quantity}
+            quantity={item}
             index={index}
             newSeries={false}
           />
         ))}
-
-        <SeriesComponent
-          newSeries={true}
-          variant={variant}
-          singleSetID={singleSet.id}
-        />
+        {singleSet.quantity.length < 6 && (
+          <SeriesComponent
+            newSeries={true}
+            variant={variant}
+            singleSetID={singleSet.id}
+          />
+        )}
       </Box>
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="comments">

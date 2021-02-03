@@ -15,6 +15,7 @@ import LoginSchema from "schemas/loginSchema";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { setUser } from "services/auth";
+import useSnackbar from "helpers/snackbarHooks/useSnackbar";
 // import { onSubmitLogin } from "services/auth";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,7 +90,7 @@ const Login = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const { showSnackbar } = useSnackbar();
   const urlFacebook = process.env.API_URL + "connect/facebook";
   const urlGoogle = process.env.API_URL + "connect/google";
 
@@ -150,20 +151,9 @@ const Login = () => {
                 setUser(data.jwt);
 
                 router.push("/");
-
-                dispatch(
-                  openSnackbar({
-                    type: SnackbarType.success,
-                    message: "Success log in",
-                  })
-                );
+                showSnackbar(SnackbarType.success, "Success log in");
               } catch {
-                dispatch(
-                  openSnackbar({
-                    type: SnackbarType.error,
-                    message: "Wrong Email or Password",
-                  })
-                );
+                showSnackbar(SnackbarType.error, "Wrong Email or Password");
               }
             }}
           >

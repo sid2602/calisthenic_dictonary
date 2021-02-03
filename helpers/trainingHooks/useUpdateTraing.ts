@@ -12,6 +12,7 @@ import { Routine } from "types/routine";
 import { handleClose } from "data/modalSlice";
 import { State } from "components/dialog/seriesDialog/seriesDialog";
 import { DialogT, handleClose as dialogHandleClose } from "data/dialogSlice";
+import useSnackbar from "helpers/snackbarHooks/useSnackbar";
 const useUpdateTraining = () => {
   const trainingState = useSelector<TrainingT, TrainingT["training"]>(
     (state) => state.training
@@ -28,6 +29,8 @@ const useUpdateTraining = () => {
   const { date } = DateState.date;
   const { trainings } = trainingState.training;
   const { activeSingleSet, exerciseVariant } = DialogState.dialog;
+  const { showSnackbar } = useSnackbar();
+
   const getTodayTraining = () => {
     const todayTraining = trainings.filter(
       (item) => item.date === (date as string)
@@ -58,12 +61,7 @@ const useUpdateTraining = () => {
 
       dispatch(setUser({ user: data.user }));
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: "Can't create training component",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.success, "Can't create training component");
     }
   };
 
@@ -77,12 +75,7 @@ const useUpdateTraining = () => {
 
       dispatch(setTraining({ trainings: data.trainings }));
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: "Can't get trainings",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.error, "Can't get trainings");
     }
   };
 
@@ -144,22 +137,60 @@ const useUpdateTraining = () => {
       const response = await putRequest(newTrainings);
 
       dispatch(setTraining({ trainings: response }));
-      dispatch(
-        openSnackbar({
-          message: "Successfully added exercises to training",
-          type: SnackbarType.success,
-        })
+      showSnackbar(
+        SnackbarType.success,
+        "Sucessfully added exercises to training"
       );
       dispatch(handleClose());
     } catch (error) {
-      dispatch(
-        openSnackbar({
-          message: "Can't update training",
-          type: SnackbarType.error,
-        })
-      );
+      showSnackbar(SnackbarType.error, "Can't update training");
       dispatch(handleClose());
     }
+  };
+
+  const returnNewSeries = (
+    kg: number,
+    minutes: number,
+    seconds: number,
+    reps: number
+  ) => {
+    let newSeries;
+
+    if (seconds > 0 && minutes > 0) {
+      newSeries = {
+        quantity: minutes * 60 + seconds,
+        variant: VariantType.minSec,
+      };
+    } else if (minutes > 0) {
+      newSeries = {
+        quantity: `${minutes}`,
+        variant: VariantType.minutes,
+      };
+    } else if (seconds > 0) {
+      newSeries = {
+        quantity: `${seconds}`,
+        variant: VariantType.seconds,
+      };
+    } else if (reps > 0) {
+      newSeries = {
+        quantity: `${reps}`,
+        variant: VariantType.rep,
+      };
+    }
+
+    if (kg > 0) {
+      newSeries = {
+        ...newSeries,
+        kg,
+      };
+    } else {
+      newSeries = {
+        ...newSeries,
+        kg: 0,
+      };
+    }
+
+    return newSeries;
   };
 
   const addSeries = async (values: State) => {
@@ -183,41 +214,7 @@ const useUpdateTraining = () => {
           (item) => item.id === activeSingleSet
         )[0];
 
-        let newSeries;
-
-        if (seconds > 0 && minutes > 0) {
-          newSeries = {
-            quantity: `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`,
-            variant: VariantType.minSec,
-          };
-        } else if (minutes > 0) {
-          newSeries = {
-            quantity: `${minutes}`,
-            variant: VariantType.minutes,
-          };
-        } else if (seconds > 0) {
-          newSeries = {
-            quantity: `${seconds}`,
-            variant: VariantType.seconds,
-          };
-        } else if (reps > 0) {
-          newSeries = {
-            quantity: `${reps}`,
-            variant: VariantType.rep,
-          };
-        }
-
-        if (kg > 0) {
-          newSeries = {
-            ...newSeries,
-            kg,
-          };
-        } else {
-          newSeries = {
-            ...newSeries,
-            kg: 0,
-          };
-        }
+        const newSeries = returnNewSeries(kg, minutes, seconds, reps);
 
         const updatedActualSingleSet = {
           ...actualSingleSet,
@@ -241,24 +238,18 @@ const useUpdateTraining = () => {
         const response = await putRequest(newTrainings as Training[]);
         dispatch(setTraining({ trainings: response }));
         dispatch(dialogHandleClose());
-        dispatch(
-          openSnackbar({
-            message: "Successfully added exercises to training",
-            type: SnackbarType.success,
-          })
+        showSnackbar(
+          SnackbarType.success,
+          "Sucessfully added series to exercise"
         );
       } else {
         badValues = true;
         throw new Error();
       }
     } catch (e) {
-      dispatch(
-        openSnackbar({
-          message: `${
-            badValues ? "use only numbers!" : "Can't add new series"
-          }`,
-          type: SnackbarType.error,
-        })
+      showSnackbar(
+        SnackbarType.error,
+        badValues ? "use only numbers!" : "Can't add new series"
       );
     }
   };
