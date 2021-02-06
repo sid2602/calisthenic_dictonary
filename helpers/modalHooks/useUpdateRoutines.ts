@@ -17,6 +17,7 @@ import { SnackbarType } from "data/snackbarSlice";
 import { setUser } from "data/userSlice";
 
 import useSnackbar from "helpers/snackbarHooks/useSnackbar";
+import { handleFetchLoadingChange } from "data/loaderSlice";
 const useUpdateRoutines = () => {
   const dispatch = useDispatch();
   const api_url = process.env.API_URL;
@@ -73,27 +74,33 @@ const useUpdateRoutines = () => {
   };
 
   const putRequest = async (newRoutines: Routine[]) => {
-    if (routines !== null) {
-      const { jwt } = parseCookies();
+    try {
+      if (routines !== null) {
+        dispatch(handleFetchLoadingChange({ loading: true }));
+        const { jwt } = parseCookies();
 
-      const headers = {
-        Authorization: `Bearer ${jwt}`,
-      };
+        const headers = {
+          Authorization: `Bearer ${jwt}`,
+        };
 
-      const { data } = await axios.put(
-        `${api_url}routines/${userState.user?.routine}`,
-        {
-          Routine: newRoutines,
-        },
-        {
-          headers,
-        }
-      );
+        const { data } = await axios.put(
+          `${api_url}routines/${userState.user?.routine}`,
+          {
+            Routine: newRoutines,
+          },
+          {
+            headers,
+          }
+        );
+        dispatch(handleFetchLoadingChange({ loading: false }));
+        return data.Routine;
+      }
 
-      return data.Routine;
+      throw new Error();
+    } catch {
+      dispatch(handleFetchLoadingChange({ loading: false }));
+      return null;
     }
-
-    return null;
   };
 
   const removeExercise = async (exerciseId: number) => {

@@ -9,11 +9,12 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
 import { SingleSet, Quantity } from "types/training";
 import { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
+
 import { openDialog, DialogType } from "data/dialogSlice";
 import { useDispatch } from "react-redux";
-
+import SeriesComponent from "./seriesComponent";
+import MenuComponent from "components/menu";
+import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listItem: {
@@ -21,29 +22,19 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: "5px",
       padding: "1rem 2rem",
       margin: "1rem 0",
-      "& span": {
-        fontSize: "1.2rem",
-        display: "block",
-        width: "200px",
-      },
 
       [theme.breakpoints.down("sm")]: {
         display: "flex",
         flexDirection: "column",
       },
     },
-
-    series: {
-      display: "flex",
-      flexDirection: "column",
-      padding: "0 0.4rem",
-      "& span": {
-        fontSize: "0.6rem",
-        textAlgin: "center",
-        width: "50px",
-        [theme.breakpoints.down("sm")]: {
-          margin: "1rem 0 0.4rem 0",
-        },
+    listItemText: {
+      fontSize: "2rem",
+      display: "block",
+      width: "200px",
+      [theme.breakpoints.down("sm")]: {
+        textAlign: "center",
+        // marginBottom: "1rem",
       },
     },
     seriesContainer: {
@@ -56,13 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
         flexWrap: "wrap",
       },
     },
-    button: {
-      background: "none",
-      border: "none",
-      color: "white",
-      cursor: "pointer",
-      outline: "none",
-    },
   })
 );
 
@@ -70,83 +54,21 @@ type Props = {
   singleSet: SingleSet;
 };
 
-type SeriesComponentProps = {
-  quantity?: Quantity;
-  index?: number;
-  newSeries: boolean;
-  variant?: VariantType;
-  singleSetID?: number;
-};
-const SeriesComponent = ({
-  quantity,
-  index,
-  newSeries,
-  variant,
-  singleSetID,
-}: SeriesComponentProps) => {
-  const dispatch = useDispatch();
-  const classes = useStyles();
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    if (quantity) {
-      const kg = `${quantity.kg > 0 ? ` x ${quantity.kg}kg` : ""}`;
-
-      if (quantity.variant === VariantType.rep) {
-        setMessage(quantity.quantity + kg);
-      } else if (quantity.variant === VariantType.seconds) {
-        setMessage(quantity.quantity + "s " + kg);
-      } else if (quantity.variant === VariantType.minutes) {
-        setMessage(quantity.quantity + "m " + kg);
-      } else if (quantity.variant === VariantType.minSec) {
-        const minutes = Math.floor(quantity.quantity / 60);
-        const seconds = quantity.quantity - minutes * 60;
-        const convertedSeconds = seconds > 10 ? seconds : "0" + seconds;
-        setMessage(minutes + "m :" + convertedSeconds + "s" + kg);
-      }
-    }
-  }, []);
-
-  return (
-    <Box className={classes.series}>
-      {newSeries ? (
-        <>
-          <Box component="span">new series </Box>
-          <Box
-            component="button"
-            className={classes.button}
-            onClick={() =>
-              dispatch(
-                openDialog({
-                  type: DialogType.add_serie,
-                  variant,
-                  activeSingleSet: singleSetID,
-                })
-              )
-            }
-          >
-            +
-          </Box>
-        </>
-      ) : (
-        <>
-          <Box component="span">series {(index as number) + 1}</Box>
-          <Box>{message}</Box>
-        </>
-      )}
-    </Box>
-  );
-};
-
 const TrainingExercise = ({ singleSet }: Props) => {
   const { name, variant } = singleSet.exercise;
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { removeExerciseFromTraining } = useUpdateTraining();
+
+  const editButtonClick = () => {};
+
+  const removeButtonClick = () => {
+    removeExerciseFromTraining(singleSet.id as number);
+  };
+
   return (
     <ListItem className={classes.listItem}>
-      <ListItemText
-        primary={name}
-        style={{ textAlign: "center", marginBottom: "1rem" }}
-      />
+      <ListItemText primary={name} className={classes.listItemText} />
       <Box className={classes.seriesContainer}>
         {singleSet.quantity.map((item, index) => (
           <SeriesComponent
@@ -156,7 +78,7 @@ const TrainingExercise = ({ singleSet }: Props) => {
             newSeries={false}
           />
         ))}
-        {singleSet.quantity.length < 6 && (
+        {singleSet.quantity.length < 8 && (
           <SeriesComponent
             newSeries={true}
             variant={variant}
@@ -165,9 +87,10 @@ const TrainingExercise = ({ singleSet }: Props) => {
         )}
       </Box>
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="comments">
-          <MoreVertIcon />
-        </IconButton>
+        <MenuComponent
+          editButtonClick={editButtonClick}
+          removeButtonClick={removeButtonClick}
+        />
       </ListItemSecondaryAction>
     </ListItem>
   );

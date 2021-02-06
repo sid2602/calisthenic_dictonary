@@ -5,6 +5,7 @@ import UserReducer from "./userSlice";
 import DialogReducer from "./dialogSlice";
 import DateReducer from "./dateSlice";
 import TrainingReducer from "./trainingSlice";
+import LoaderReducer from "./loaderSlice";
 const Store = configureStore({
   reducer: {
     snackbar: SnackBarReducer,
@@ -13,6 +14,7 @@ const Store = configureStore({
     dialog: DialogReducer,
     date: DateReducer,
     training: TrainingReducer,
+    loader: LoaderReducer,
   },
 });
 

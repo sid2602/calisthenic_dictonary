@@ -7,12 +7,13 @@ import { DateT } from "data/dateSlice";
 import { openSnackbar, SnackbarType } from "data/snackbarSlice";
 import { setTraining, TrainingT } from "data/trainingSlice";
 import { Exercise, VariantType } from "types/exercises";
-import { Training } from "types/training";
+import { Training, SingleSet } from "types/training";
 import { Routine } from "types/routine";
 import { handleClose } from "data/modalSlice";
 import { State } from "components/dialog/seriesDialog/seriesDialog";
 import { DialogT, handleClose as dialogHandleClose } from "data/dialogSlice";
 import useSnackbar from "helpers/snackbarHooks/useSnackbar";
+import { handleFetchLoadingChange } from "data/loaderSlice";
 const useUpdateTraining = () => {
   const trainingState = useSelector<TrainingT, TrainingT["training"]>(
     (state) => state.training
@@ -80,23 +81,29 @@ const useUpdateTraining = () => {
   };
 
   const putRequest = async (newTrainings: Training[]) => {
-    const { jwt } = parseCookies();
+    try {
+      dispatch(handleFetchLoadingChange({ loading: true }));
+      const { jwt } = parseCookies();
 
-    const headers = {
-      Authorization: `Bearer ${jwt}`,
-    };
+      const headers = {
+        Authorization: `Bearer ${jwt}`,
+      };
 
-    const { data } = await axios.put(
-      `${api_url}trainings/${userState.user?.trainings}`,
-      {
-        trainings: newTrainings,
-      },
-      {
-        headers,
-      }
-    );
-
-    return data.trainings;
+      const { data } = await axios.put(
+        `${api_url}trainings/${userState.user?.trainings}`,
+        {
+          trainings: newTrainings,
+        },
+        {
+          headers,
+        }
+      );
+      dispatch(handleFetchLoadingChange({ loading: false }));
+      return data.trainings;
+    } catch {
+      dispatch(handleFetchLoadingChange({ loading: false }));
+      return [];
+    }
   };
 
   const addExercisesToTraining = async (selectedExercises: Exercise[]) => {
@@ -137,6 +144,7 @@ const useUpdateTraining = () => {
       const response = await putRequest(newTrainings);
 
       dispatch(setTraining({ trainings: response }));
+
       showSnackbar(
         SnackbarType.success,
         "Sucessfully added exercises to training"
@@ -254,6 +262,23 @@ const useUpdateTraining = () => {
     }
   };
 
+  const removeExerciseFromTraining = async (singleSetID: number) => {
+    try {
+      const newTrainings = trainings.map((item) => ({
+        ...item,
+        singleSet: item.singleSet.filter(
+          (singleSet) => singleSet.id !== singleSetID
+        ),
+      }));
+
+      const response = await putRequest(newTrainings);
+      dispatch(setTraining({ trainings: response }));
+      showSnackbar(SnackbarType.success, "Sucessfully removed exercise");
+    } catch {
+      showSnackbar(SnackbarType.error, "Can't remove Exercise");
+    }
+  };
+
   return {
     createTrainingComponent,
     getTrainings,
@@ -261,6 +286,7 @@ const useUpdateTraining = () => {
     date,
     getTodayTraining,
     addSeries,
+    removeExerciseFromTraining,
   };
 };
 

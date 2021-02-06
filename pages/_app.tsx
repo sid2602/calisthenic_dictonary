@@ -8,12 +8,13 @@ import store from "data/store";
 import SnackBar from "components/snackBar/snackbar";
 import Modal from "components/modal/modal";
 import Dialog from "components/dialog/dialog";
-
+import ProgressBar from "components/progressBar";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <ThemeProvider darkTheme={true}>
         <GlobalStyle />
+        <ProgressBar />
         <Layout>
           <SnackBar />
           <Dialog />

@@ -20,6 +20,7 @@ import Fade from "@material-ui/core/Fade";
 import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
 import { openDialog, DialogType } from "data/dialogSlice";
 import { openModal, ModalTypeTypes } from "data/modalSlice";
+import MenuComponent from "components/menu";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
@@ -57,24 +58,15 @@ const RoutinesList = ({ routine }: Props) => {
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const { removeRoutine } = useUpdateRoutines();
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleEditButtonClick = () => {
+  const editButtonClick = () => {
     dispatch(setActiveRoutine({ activeRoutine: routine.id as number }));
     dispatch(openDialog({ type: DialogType.edit_routine }));
     dispatch(openModal({ type: ModalTypeTypes.routines }));
-    handleClose();
   };
 
-  const handleRemoveButtonClick = () => {
+  const removeButtonClick = () => {
     removeRoutine(routine.id as number);
-    handleClose();
   };
 
   const classes = useStyles();
@@ -83,24 +75,10 @@ const RoutinesList = ({ routine }: Props) => {
     <Grid item xs={12} sm={5} className={classes.grid}>
       <Card className={classes.card}>
         <CardActions className={classes.cardAction}>
-          <IconButton
-            aria-controls="fade-menu"
-            aria-label="settings"
-            onClick={handleClick}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            id="fade-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={open}
-            onClose={handleClose}
-            TransitionComponent={Fade}
-          >
-            <MenuItem onClick={handleEditButtonClick}>Edit</MenuItem>
-            <MenuItem onClick={handleRemoveButtonClick}>Remove</MenuItem>
-          </Menu>
+          <MenuComponent
+            editButtonClick={editButtonClick}
+            removeButtonClick={removeButtonClick}
+          />
         </CardActions>
 
         <CardContent
