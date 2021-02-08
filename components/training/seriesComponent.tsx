@@ -30,7 +30,10 @@ const useStyles = makeStyles((theme: Theme) =>
       outline: "none",
       padding: "0 5px 0 0",
     },
-
+    editButton: {
+      padding: "0",
+      textAlign: "left",
+    },
     span: {
       fontSize: "0.6rem",
       textAlgin: "center",
@@ -78,12 +81,12 @@ const SeriesComponent = ({
         setMessage(minutes + "m :" + convertedSeconds + "s" + kg);
       }
     }
-  }, []);
+  }, [quantity]);
 
   return (
-    <Box className={classes.series}>
+    <>
       {newSeries ? (
-        <>
+        <Box className={classes.series}>
           <Box component="span" className={classes.span}>
             new series{" "}
           </Box>
@@ -96,22 +99,39 @@ const SeriesComponent = ({
                   type: DialogType.add_serie,
                   variant,
                   activeSingleSet: singleSetID,
+                  title: "New Series",
                 })
               )
             }
           >
             +
           </Box>
-        </>
+        </Box>
       ) : (
         <>
-          <Box component="span" className={classes.span}>
-            series {(index as number) + 1}
+          <Box
+            className={classes.series}
+            style={{ cursor: "pointer" }}
+            onClick={() =>
+              dispatch(
+                openDialog({
+                  type: DialogType.add_serie,
+                  variant,
+                  activeSingleSet: singleSetID,
+                  title: `Series ${(index as number) + 1}`,
+                  activeSeries: quantity ? quantity.id : -1,
+                })
+              )
+            }
+          >
+            <Box component="span" className={classes.span}>
+              series {(index as number) + 1}
+            </Box>
+            <Box>{message}</Box>
           </Box>
-          <Box>{message}</Box>
         </>
       )}
-    </Box>
+    </>
   );
 };
 

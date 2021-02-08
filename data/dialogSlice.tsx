@@ -14,6 +14,8 @@ export type DialogTypes = {
     isOpen: boolean;
     exerciseVariant: VariantType;
     activeSingleSet: number;
+    title: string;
+    activeSeries: number;
   };
 };
 
@@ -21,6 +23,8 @@ export type DialogHandleClick = {
   type: DialogType;
   variant?: VariantType;
   activeSingleSet?: number;
+  title?: string;
+  activeSeries?: number;
 };
 
 export type DialogT = {
@@ -33,6 +37,8 @@ const initialState = {
     isOpen: false,
     exerciseVariant: VariantType.rep,
     activeSingleSet: 0,
+    title: "",
+    activeSeries: -1,
   },
 } as DialogTypes;
 
@@ -42,14 +48,17 @@ export const DialogSlice = createSlice({
   reducers: {
     handleClose: (state) => {
       state.dialog.isOpen = false;
+      state.dialog.activeSeries = -1;
     },
     openDialog: (state, action: PayloadAction<DialogHandleClick>) => {
       state.dialog.isOpen = true;
       state.dialog.type = action.payload.type;
 
-      const { variant, activeSingleSet } = action.payload;
+      const { variant, activeSingleSet, title, activeSeries } = action.payload;
       if (variant) state.dialog.exerciseVariant = variant;
       if (activeSingleSet) state.dialog.activeSingleSet = activeSingleSet;
+      if (title) state.dialog.title = title;
+      if (activeSeries) state.dialog.activeSeries = activeSeries;
     },
   },
 });

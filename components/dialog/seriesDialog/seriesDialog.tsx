@@ -56,7 +56,7 @@ const SeriesDialog = () => {
     (state) => state.dialog
   );
 
-  const { exerciseVariant } = DialogState.dialog;
+  const { exerciseVariant, title, activeSeries } = DialogState.dialog;
 
   const [values, setValues] = React.useState<State>({
     kg: "",
@@ -65,17 +65,22 @@ const SeriesDialog = () => {
     rep: "",
   });
 
-  const { addSeries } = useUpdateTraining();
+  const { actionOnSeries, removeSeries } = useUpdateTraining();
+
+  const handleAddBtnClick = () => {
+    actionOnSeries(values, activeSeries);
+  };
 
   const handleChange = (prop: keyof State) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setValues({ ...values, [prop]: event.target.value });
   };
+
   return (
     <>
       <DialogTitle id="form-dialog-title" className={classes.dialogTitle}>
-        New Series
+        {title}
       </DialogTitle>
       {exerciseVariant !== VariantType.rep ? (
         <Box className={classes.inputContainer}>
@@ -148,10 +153,13 @@ const SeriesDialog = () => {
       </FormControl>
 
       <DialogActions>
+        {activeSeries > -1 && (
+          <Button onClick={() => removeSeries(activeSeries)}>Remove</Button>
+        )}
         <Button onClick={() => dispatch(handleClose())} color="primary">
           Cancel
         </Button>
-        <Button color="secondary" onClick={() => addSeries(values)}>
+        <Button color="secondary" onClick={handleAddBtnClick}>
           Add
         </Button>
       </DialogActions>

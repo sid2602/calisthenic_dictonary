@@ -4,7 +4,7 @@ import List from "@material-ui/core/List";
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { ListItemSecondaryAction, IconButton } from "@material-ui/core";
+import { ListItemSecondaryAction, IconButton, Icon } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Box from "@material-ui/core/Box";
 import { SingleSet, Quantity } from "types/training";
@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import SeriesComponent from "./seriesComponent";
 import MenuComponent from "components/menu";
 import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
+import DeleteIcon from "@material-ui/icons/Delete";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     listItem: {
@@ -57,10 +58,7 @@ type Props = {
 const TrainingExercise = ({ singleSet }: Props) => {
   const { name, variant } = singleSet.exercise;
   const classes = useStyles();
-  const dispatch = useDispatch();
   const { removeExerciseFromTraining } = useUpdateTraining();
-
-  const editButtonClick = () => {};
 
   const removeButtonClick = () => {
     removeExerciseFromTraining(singleSet.id as number);
@@ -76,6 +74,8 @@ const TrainingExercise = ({ singleSet }: Props) => {
             quantity={item}
             index={index}
             newSeries={false}
+            singleSetID={singleSet.id}
+            variant={variant}
           />
         ))}
         {singleSet.quantity.length < 8 && (
@@ -87,10 +87,9 @@ const TrainingExercise = ({ singleSet }: Props) => {
         )}
       </Box>
       <ListItemSecondaryAction>
-        <MenuComponent
-          editButtonClick={editButtonClick}
-          removeButtonClick={removeButtonClick}
-        />
+        <IconButton onClick={removeButtonClick}>
+          <DeleteIcon />
+        </IconButton>
       </ListItemSecondaryAction>
     </ListItem>
   );

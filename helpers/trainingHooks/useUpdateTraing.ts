@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { UserSlice, User } from "types/user";
+import { UserSlice } from "types/user";
 import { parseCookies } from "nookies";
 import axios from "axios";
 import { setUser } from "data/userSlice";
 import { DateT } from "data/dateSlice";
-import { openSnackbar, SnackbarType } from "data/snackbarSlice";
+import { SnackbarType } from "data/snackbarSlice";
 import { setTraining, TrainingT } from "data/trainingSlice";
 import { Exercise, VariantType } from "types/exercises";
-import { Training, SingleSet } from "types/training";
-import { Routine } from "types/routine";
+import { Training } from "types/training";
+
 import { handleClose } from "data/modalSlice";
 import { State } from "components/dialog/seriesDialog/seriesDialog";
 import { DialogT, handleClose as dialogHandleClose } from "data/dialogSlice";
@@ -26,10 +26,9 @@ const useUpdateTraining = () => {
     (state) => state.dialog
   );
 
-  const { user } = userState;
   const { date } = DateState.date;
   const { trainings } = trainingState.training;
-  const { activeSingleSet, exerciseVariant } = DialogState.dialog;
+  const { activeSingleSet } = DialogState.dialog;
   const { showSnackbar } = useSnackbar();
 
   const getTodayTraining = () => {
@@ -157,6 +156,7 @@ const useUpdateTraining = () => {
   };
 
   const returnNewSeries = (
+    id: number,
     kg: number,
     minutes: number,
     seconds: number,
@@ -186,6 +186,13 @@ const useUpdateTraining = () => {
       };
     }
 
+    if (id > -1) {
+      newSeries = {
+        ...newSeries,
+        id,
+      };
+    }
+
     if (kg > 0) {
       newSeries = {
         ...newSeries,
@@ -201,7 +208,7 @@ const useUpdateTraining = () => {
     return newSeries;
   };
 
-  const addSeries = async (values: State) => {
+  const actionOnSeries = async (values: State, activeSeries: number) => {
     let badValues = false;
 
     try {
@@ -222,12 +229,39 @@ const useUpdateTraining = () => {
           (item) => item.id === activeSingleSet
         )[0];
 
-        const newSeries = returnNewSeries(kg, minutes, seconds, reps);
+        const newSeries = returnNewSeries(
+          activeSeries,
+          kg,
+          minutes,
+          seconds,
+          reps
+        );
 
-        const updatedActualSingleSet = {
-          ...actualSingleSet,
-          quantity: [...actualSingleSet.quantity, newSeries],
+        type UpdatedActualSingleSet = {
+          quantity: {
+            kg: number;
+          }[];
+          exercise: Exercise;
+          id?: number;
         };
+
+        let updatedActualSingleSet: UpdatedActualSingleSet;
+
+        //add new seires
+        if (activeSeries === -1) {
+          updatedActualSingleSet = {
+            ...actualSingleSet,
+            quantity: [...actualSingleSet.quantity, newSeries],
+          };
+        } else {
+          //edit actual series
+          updatedActualSingleSet = {
+            ...actualSingleSet,
+            quantity: actualSingleSet.quantity.map((item) =>
+              item.id === activeSeries ? newSeries : item
+            ),
+          };
+        }
 
         const newTraining = {
           ...actualTraining,
@@ -244,6 +278,7 @@ const useUpdateTraining = () => {
         );
 
         const response = await putRequest(newTrainings as Training[]);
+
         dispatch(setTraining({ trainings: response }));
         dispatch(dialogHandleClose());
         showSnackbar(
@@ -279,14 +314,42 @@ const useUpdateTraining = () => {
     }
   };
 
+  const removeSeries = async (activeSeries: number) => {
+    // console.log(activeSingleSet);
+    try {
+      const newTrainings = trainings.map((item) => ({
+        ...item,
+        singleSet: [
+          ...item.singleSet.map((singleSet) => {
+            const newSingleSet = {
+              ...singleSet,
+              quantity: singleSet.quantity.filter(
+                (quantity) => quantity.id !== activeSeries
+              ),
+            };
+
+            return newSingleSet;
+          }),
+        ],
+      }));
+      const response = await putRequest(newTrainings);
+      dispatch(setTraining({ trainings: response }));
+      showSnackbar(SnackbarType.success, "Sucessfully removed exercise");
+      dispatch(dialogHandleClose());
+    } catch {
+      showSnackbar(SnackbarType.error, "Can't remove series");
+    }
+  };
+
   return {
     createTrainingComponent,
     getTrainings,
     addExercisesToTraining,
     date,
     getTodayTraining,
-    addSeries,
+    actionOnSeries,
     removeExerciseFromTraining,
+    removeSeries,
   };
 };
 
