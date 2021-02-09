@@ -5,13 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  Box,
-  IconButton,
-} from "@material-ui/core";
+import { makeStyles, createStyles, Theme, IconButton } from "@material-ui/core";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";

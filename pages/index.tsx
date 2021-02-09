@@ -80,7 +80,10 @@ const Home = ({ user }: User) => {
   }, []);
 
   useEffect(() => {
-    if (user?.trainings) getTrainings(user.trainings);
+    if (user?.trainings)
+      setTimeout(() => {
+        getTrainings(user.trainings);
+      }, 1000);
   }, [user?.trainings]);
 
   return (

@@ -4,7 +4,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
-
 import {
   makeStyles,
   createStyles,
@@ -13,7 +12,6 @@ import {
   IconButton,
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-
 import {
   openModal,
   ModalTypeTypes,
@@ -23,10 +21,8 @@ import {
 } from "data/modalSlice";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import SingleRoutineList from "./singleRoutineList";
-
 import useSelectExercise from "helpers/modalHooks/useSelectExercise";
 import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -82,8 +78,6 @@ const SingleRoutine = () => {
       addExercisesToTraining(selectedExercises);
     }
   };
-
-  // const {exercises} =routines[activeRoutine]!.Exercises
 
   return (
     <>

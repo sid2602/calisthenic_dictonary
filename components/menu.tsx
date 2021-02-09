@@ -1,9 +1,5 @@
 import { useState } from "react";
 import { Menu, Fade, MenuItem, IconButton } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { setActiveRoutine, openModal, ModalTypeTypes } from "data/modalSlice";
-import { openDialog, DialogType } from "data/dialogSlice";
-import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 type Props = {

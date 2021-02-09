@@ -54,8 +54,6 @@ type Props = {
 };
 
 const RoutinesList = ({ routine }: Props) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const { removeRoutine } = useUpdateRoutines();
 

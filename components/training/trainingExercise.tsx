@@ -1,19 +1,10 @@
-import { Exercise, VariantType } from "types/exercises";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import { ListItemSecondaryAction, IconButton, Icon } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { ListItemSecondaryAction, IconButton } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
-import { SingleSet, Quantity } from "types/training";
-import { useState, useEffect } from "react";
-
-import { openDialog, DialogType } from "data/dialogSlice";
-import { useDispatch } from "react-redux";
+import { SingleSet } from "types/training";
 import SeriesComponent from "./seriesComponent";
-import MenuComponent from "components/menu";
 import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
 import DeleteIcon from "@material-ui/icons/Delete";
 const useStyles = makeStyles((theme: Theme) =>

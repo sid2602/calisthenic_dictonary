@@ -1,7 +1,7 @@
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import React from "react";
-import { handleClick, handleClose } from "data/snackbarSlice";
+import { handleClose } from "data/snackbarSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { SnackBarTypes } from "data/snackbarSlice";
 

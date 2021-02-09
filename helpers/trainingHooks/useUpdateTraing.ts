@@ -8,7 +8,6 @@ import { SnackbarType } from "data/snackbarSlice";
 import { setTraining, TrainingT } from "data/trainingSlice";
 import { Exercise, VariantType } from "types/exercises";
 import { Training } from "types/training";
-
 import { handleClose } from "data/modalSlice";
 import { State } from "components/dialog/seriesDialog/seriesDialog";
 import { DialogT, handleClose as dialogHandleClose } from "data/dialogSlice";
@@ -68,13 +67,14 @@ const useUpdateTraining = () => {
   const getTrainings = async (trainingId: number) => {
     try {
       const { jwt } = parseCookies();
-
+      dispatch(handleFetchLoadingChange({ loading: true }));
       const { data } = await axios.get(`${api_url}trainings/${trainingId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       });
-
+      dispatch(handleFetchLoadingChange({ loading: false }));
       dispatch(setTraining({ trainings: data.trainings }));
     } catch (e) {
+      dispatch(handleFetchLoadingChange({ loading: false }));
       showSnackbar(SnackbarType.error, "Can't get trainings");
     }
   };
@@ -315,7 +315,6 @@ const useUpdateTraining = () => {
   };
 
   const removeSeries = async (activeSeries: number) => {
-    // console.log(activeSingleSet);
     try {
       const newTrainings = trainings.map((item) => ({
         ...item,

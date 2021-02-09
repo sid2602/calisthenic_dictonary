@@ -4,7 +4,6 @@ import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavContext } from "./index";
 import ListComponent from "./list";
-import { Typography } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   list: {
     backgroundColor: theme.palette.background.paper,

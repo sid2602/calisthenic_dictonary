@@ -14,6 +14,8 @@ import { openModal, ModalTypeTypes } from "data/modalSlice";
 import { useDispatch } from "react-redux";
 import { useContext } from "react";
 import { NavContext } from "./index";
+import useSnackbar from "helpers/snackbarHooks/useSnackbar";
+import { SnackbarType } from "data/snackbarSlice";
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: "0 0 0 2rem",
@@ -33,6 +35,7 @@ const ListComponent = () => {
   const { toogleDrawer } = value;
 
   const dispatch = useDispatch();
+  const { showSnackbar } = useSnackbar();
 
   const dispatchModal = (type: ModalTypeTypes) => {
     dispatch(openModal({ type }));
@@ -46,13 +49,10 @@ const ListComponent = () => {
     },
     {
       name: "Profile",
-      link: "/Profile",
+      link: "",
       icon: <AccountCircleIcon style={{ fontSize: "35px" }} />,
-    },
-    {
-      name: "Training",
-      link: "/training",
-      icon: <DrawerIcon src="img/training.png" alt="training" />,
+      onClick: () =>
+        showSnackbar(SnackbarType.info, "This feature will be available soon"),
     },
     {
       name: "Exercises",
@@ -68,8 +68,10 @@ const ListComponent = () => {
     },
     {
       name: "Statistic",
-      link: "/statistic",
+      link: "/",
       icon: <EqualizerIcon style={{ fontSize: "40px" }} />,
+      onClick: () =>
+        showSnackbar(SnackbarType.info, "This feature will be available soon"),
     },
     {
       name: "log out",

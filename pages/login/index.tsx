@@ -16,7 +16,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { setUser } from "services/auth";
 import useSnackbar from "helpers/snackbarHooks/useSnackbar";
-// import { onSubmitLogin } from "services/auth";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
