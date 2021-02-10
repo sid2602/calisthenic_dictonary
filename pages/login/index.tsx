@@ -8,7 +8,7 @@ import styled from "styled-components";
 
 import { useDispatch } from "react-redux";
 import { Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { openSnackbar } from "data/snackbarSlice";
 import { SnackbarType } from "data/snackbarSlice";
 import LoginSchema from "schemas/loginSchema";
@@ -16,6 +16,8 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { setUser } from "services/auth";
 import useSnackbar from "helpers/snackbarHooks/useSnackbar";
+import { destroyCookie } from "nookies";
+import { handleFetchLoadingChange } from "data/loaderSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -125,6 +127,9 @@ const Login = () => {
       );
     }
   };
+  useEffect(() => {
+    destroyCookie(null, "jwt");
+  }, []);
 
   return (
     <>
@@ -143,17 +148,19 @@ const Login = () => {
               const loginSrc = `${process.env.API_URL}auth/local`;
 
               try {
+                dispatch(handleFetchLoadingChange({ loading: true }));
                 const { data } = await axios.post(loginSrc, {
                   identifier: values.email,
                   password: values.password,
                 });
 
                 setUser(data.jwt);
-
+                dispatch(handleFetchLoadingChange({ loading: false }));
                 router.push("/");
                 showSnackbar(SnackbarType.success, "Success log in");
               } catch {
                 showSnackbar(SnackbarType.error, "Wrong Email or Password");
+                dispatch(handleFetchLoadingChange({ loading: false }));
               }
             }}
           >

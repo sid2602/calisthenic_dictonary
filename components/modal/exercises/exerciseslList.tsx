@@ -31,16 +31,11 @@ const ExercisesList = ({ item, selectedExercises, selectExercise }: Props) => {
     setOpen(!open);
   };
 
-  const api_url = process.env.API_URL;
-
   return (
     <div key={`${item.id}exercisesGroups`}>
       <ListItem button onClick={handleClick}>
         <ListItemIcon>
-          <img
-            style={{ width: "30px", color: "white" }}
-            src={`${api_url}uploads/${item.icon.hash}.svg`}
-          />
+          <img style={{ width: "30px", color: "white" }} src={item.icon.url} />
         </ListItemIcon>
         <ListItemText>{item.muscle_group}</ListItemText>
         {item.exercises.length > 0 ? (

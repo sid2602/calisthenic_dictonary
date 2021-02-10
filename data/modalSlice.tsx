@@ -65,6 +65,9 @@ export const ModalSlice = createSlice({
     openModal: (state, action: PayloadAction<ModalHandleClick>) => {
       state.modal.isOpen = true;
       state.modal.type = action.payload.type;
+      state.modal.addExerciseToRoutineFlag = false;
+      state.modal.addExerciseToTrainingFlag = false;
+      state.modal.addRoutineToTrainingFlag = false;
     },
     setRoutines: (state, action: PayloadAction<SetRoutinesType>) => {
       state.modal.routines = action.payload.routines;

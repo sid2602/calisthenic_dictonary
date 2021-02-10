@@ -12,7 +12,7 @@ export const setUser = (jwt: string) => {
 
 export const logOutUser = () => {
   destroyCookie(null, "jwt");
-  window.location.reload(true);
+  window.location.replace("login");
 };
 
 export const userIsLogged = async (context: GetServerSidePropsContext) => {

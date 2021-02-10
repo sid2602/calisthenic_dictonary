@@ -4,9 +4,9 @@ import { handleClose } from "data/modalSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { ModalTypes, ModalTypeTypes } from "data/modalSlice";
 import Dialog from "@material-ui/core/Dialog";
-import Exercises from "./exercises";
-import Routines from "./routines";
-import SingleRoutine from "./singleRoutine";
+import Exercises from "./exercises/exercises";
+import Routines from "./routines/routines";
+import SingleRoutine from "./singleRoutine/singleRoutine";
 
 type ModalT = {
   modal: ModalTypes;

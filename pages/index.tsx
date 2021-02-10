@@ -4,18 +4,14 @@ import { User, Jwt } from "types/user";
 import { setUser } from "data/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+
 import { makeStyles } from "@material-ui/core/styles";
 import useUpdateTraining from "helpers/trainingHooks/useUpdateTraing";
 import Box from "@material-ui/core/Box";
-import { DateT } from "data/dateSlice";
+
 import TrainingExercise from "components/training/trainingExercise";
-import Exercises from "components/modal/exercises";
+
 import List from "@material-ui/core/List";
-import ListItem, { ListItemProps } from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 
 const useStyles = makeStyles((theme) => ({
   placeholder: {
@@ -91,7 +87,7 @@ const Home = ({ user }: User) => {
       <Box className={classes.date}>
         <Box component="h1">{date}</Box>
       </Box>
-      {todayTraining ? (
+      {todayTraining && todayTraining.length > 0 ? (
         <List className={classes.container} aria-label="main mailbox folders">
           {todayTraining.map((item) => (
             <TrainingExercise key={item.id} singleSet={item} />

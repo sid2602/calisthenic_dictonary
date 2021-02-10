@@ -2,6 +2,12 @@
 
 The application allows you to keep a training diary. You can create your own routines as well as monitor your workouts by adding series. Website created by Next.js, Typescript, Strapi
 
+## Demo
+
+https://calisthenic-dictonary.vercel.app/
+
+![Demo](./public/img/readme/demo.jpg)
+
 ## Technologies
 
 - Next 10.0.4
@@ -22,7 +28,7 @@ The application allows you to keep a training diary. You can create your own rou
 - Login with Google and Facebook
 - Create new routines, add to them exercises
 - Create training, add to them exercises or routines
-- Add series to training
+- Add series in training
 
 ## Screenshots
 

@@ -1,5 +1,4 @@
 import { Routine } from "types/routine";
-import { useState } from "react";
 import {
   CardActions,
   makeStyles,
@@ -10,13 +9,8 @@ import { setActiveRoutine } from "data/modalSlice";
 import Card from "@material-ui/core/Card";
 import { useDispatch } from "react-redux";
 import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Grid from "@material-ui/core/Grid";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import Fade from "@material-ui/core/Fade";
 import useUpdateRoutines from "helpers/modalHooks/useUpdateRoutines";
 import { openDialog, DialogType } from "data/dialogSlice";
 import { openModal, ModalTypeTypes } from "data/modalSlice";
