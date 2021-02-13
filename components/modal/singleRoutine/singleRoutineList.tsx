@@ -36,7 +36,7 @@ const SingleRoutineList = ({
 
   return (
     <>
-      <List aria-label="main mailbox folders">
+      <List aria-label="main mailbox folders" component="article">
         <ListItem
           button
           className={classes.listItem}
@@ -44,6 +44,7 @@ const SingleRoutineList = ({
           selected={
             selectedExercises.map((item) => item.id).indexOf(exercise.id) > -1
           }
+          component="button"
         >
           <ListItemText primary={exercise.name} />
           <ListItemSecondaryAction>

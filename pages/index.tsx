@@ -15,6 +15,7 @@ import List from "@material-ui/core/List";
 
 const useStyles = makeStyles((theme) => ({
   placeholder: {
+    margin: "0",
     position: "absolute",
     left: "50%",
     top: "50%",
@@ -36,11 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
   date: {
     paddingTop: "1rem",
-    margin: "0 auto",
     textAlign: "center",
-    "& h1": {
+    "& time": {
       color: "#636363",
+      fontWeight: "bold",
       letterSpacing: "5px",
+      fontSize: "1.8rem",
       [theme.breakpoints.down("xs")]: {
         fontSize: "1.5rem",
       },
@@ -84,17 +86,23 @@ const Home = ({ user }: User) => {
 
   return (
     <>
-      <Box className={classes.date}>
-        <Box component="h1">{date}</Box>
+      <Box className={classes.date} component="section">
+        <Box component="time" className={classes.date}>
+          {date}
+        </Box>
       </Box>
       {todayTraining && todayTraining.length > 0 ? (
-        <List className={classes.container} aria-label="main mailbox folders">
+        <List
+          className={classes.container}
+          aria-label="main mailbox folders"
+          component="section"
+        >
           {todayTraining.map((item) => (
             <TrainingExercise key={item.id} singleSet={item} />
           ))}
         </List>
       ) : (
-        <Box className={classes.placeholder}>
+        <Box className={classes.placeholder} component="aside">
           <img src="img/placeholder.png" alt="placeholder" />
           <Box component="h2">Add Exercises to training</Box>
         </Box>

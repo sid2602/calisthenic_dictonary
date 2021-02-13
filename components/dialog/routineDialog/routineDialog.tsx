@@ -31,35 +31,42 @@ const RoutineDialog = ({ type }: Props) => {
   const checkIsNewRoutine = () => type === DialogType.add_new_routine;
 
   return (
-    <>
-      <DialogTitle id="form-dialog-title">
-        {checkIsNewRoutine() ? "Add new routine" : "Edit routine name"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {checkIsNewRoutine()
-            ? "Add a name for the new routine"
-            : "Add a name to edit routine"}
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label={checkIsNewRoutine() ? "New routine" : "Edit routine"}
-          type="text"
-          fullWidth
-          inputRef={textInput}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => dispatch(handleClose())} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={onInputClick} color="secondary">
-          {checkIsNewRoutine() ? "Add new routine" : "Edit routine"}
-        </Button>
-      </DialogActions>
-    </>
+    <section>
+      <header>
+        <DialogTitle id="form-dialog-title">
+          {checkIsNewRoutine() ? "Add new routine" : "Edit routine name"}
+        </DialogTitle>
+      </header>
+      <section>
+        <DialogContent>
+          <DialogContentText>
+            {checkIsNewRoutine()
+              ? "Add a name for the new routine"
+              : "Add a name to edit routine"}
+          </DialogContentText>
+
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label={checkIsNewRoutine() ? "New routine" : "Edit routine"}
+            type="text"
+            fullWidth
+            inputRef={textInput}
+          />
+        </DialogContent>
+      </section>
+      <footer>
+        <DialogActions>
+          <Button onClick={() => dispatch(handleClose())} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={onInputClick} color="secondary">
+            {checkIsNewRoutine() ? "Add new routine" : "Edit routine"}
+          </Button>
+        </DialogActions>
+      </footer>
+    </section>
   );
 };
 

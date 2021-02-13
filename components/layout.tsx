@@ -25,13 +25,12 @@ const Layout = ({ children }: Props) => {
   return (
     <>
       <Navigation />
-      <Box component="main">
-        <Paper elevation={0} square className={classes.root}>
-          <Container fixed>
-            <>{children}</>
-          </Container>
-        </Paper>
-      </Box>
+
+      <Paper elevation={0} square className={classes.root} component="main">
+        <Container fixed component="section">
+          <>{children}</>
+        </Container>
+      </Paper>
     </>
   );
 };

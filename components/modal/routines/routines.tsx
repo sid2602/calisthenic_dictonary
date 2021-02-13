@@ -59,49 +59,55 @@ const Routines = () => {
 
   return (
     <>
-      <DialogTitle id="form-dialog-title">
-        <Box className={classes.spaceBetween}>
-          <Typography>Routines</Typography>
+      <header>
+        <DialogTitle id="form-dialog-title">
+          <Box className={classes.spaceBetween}>
+            <Typography>Routines</Typography>
 
-          <Button
-            color="secondary"
-            onClick={() =>
-              dispatch(openDialog({ type: DialogType.add_new_routine }))
-            }
+            <Button
+              color="secondary"
+              onClick={() =>
+                dispatch(openDialog({ type: DialogType.add_new_routine }))
+              }
+            >
+              Add new routine
+            </Button>
+          </Box>
+        </DialogTitle>
+      </header>
+      <section>
+        <DialogContent className={classes.root}>
+          <Grid
+            container
+            direction="row"
+            justify="space-evenly"
+            alignItems="center"
+            spacing={2}
           >
-            Add new routine
-          </Button>
-        </Box>
-      </DialogTitle>
-      <DialogContent className={classes.root}>
-        <Grid
-          container
-          direction="row"
-          justify="space-evenly"
-          alignItems="center"
-          spacing={2}
-        >
-          {routines !== null ? (
-            routines.length > 0 ? (
-              routines?.map((routine) => (
-                <RoutinesList
-                  routine={routine}
-                  key={routine.name + routine.id}
-                />
-              ))
+            {routines !== null ? (
+              routines.length > 0 ? (
+                routines?.map((routine) => (
+                  <RoutinesList
+                    routine={routine}
+                    key={routine.name + routine.id}
+                  />
+                ))
+              ) : (
+                <h2>There is no routine</h2>
+              )
             ) : (
-              <h2>There is no routine</h2>
-            )
-          ) : (
-            <CircularProgress size={50} />
-          )}
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button color="primary" onClick={() => dispatch(handleClose())}>
-          Cancel
-        </Button>
-      </DialogActions>
+              <CircularProgress size={50} />
+            )}
+          </Grid>
+        </DialogContent>
+      </section>
+      <footer>
+        <DialogActions>
+          <Button color="primary" onClick={() => dispatch(handleClose())}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </footer>
     </>
   );
 };

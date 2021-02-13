@@ -93,7 +93,7 @@ const Navigation = () => {
   return (
     <AppBar position="static" className={classes.appBar}>
       {Router.pathname !== "/login" && (
-        <Toolbar>
+        <Toolbar component="section">
           <Box className={classes.iconContainer}>
             <IconButton
               edge="start"

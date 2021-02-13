@@ -17,9 +17,11 @@ const DrawerContainer = () => {
   const { toogleDrawer, isActive } = value;
   return (
     <Drawer anchor="left" open={isActive} onClose={toogleDrawer}>
-      <List aria-labelledby="nested-list-subheader" className={classes.list}>
-        <ListComponent />
-      </List>
+      <nav>
+        <List aria-labelledby="nested-list-subheader" className={classes.list}>
+          <ListComponent />
+        </List>
+      </nav>
     </Drawer>
   );
 };

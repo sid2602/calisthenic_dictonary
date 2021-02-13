@@ -14,20 +14,18 @@ const DialogComponent = () => {
   const { isOpen, type } = DialogState.dialog;
 
   return (
-    <div>
-      <Dialog
-        open={isOpen}
-        onClose={() => dispatch(handleClose())}
-        aria-labelledby="form-dialog-title"
-      >
-        {type === DialogType.add_new_routine ||
-        type === DialogType.edit_routine ? (
-          <RoutineDialog type={type} />
-        ) : (
-          <SeriesDialog />
-        )}
-      </Dialog>
-    </div>
+    <Dialog
+      open={isOpen}
+      onClose={() => dispatch(handleClose())}
+      aria-labelledby="form-dialog-title"
+    >
+      {type === DialogType.add_new_routine ||
+      type === DialogType.edit_routine ? (
+        <RoutineDialog type={type} />
+      ) : (
+        <SeriesDialog />
+      )}
+    </Dialog>
   );
 };
 

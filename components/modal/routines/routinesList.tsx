@@ -64,7 +64,7 @@ const RoutinesList = ({ routine }: Props) => {
   const classes = useStyles();
 
   return (
-    <Grid item xs={12} sm={5} className={classes.grid}>
+    <Grid item xs={12} sm={5} className={classes.grid} component="article">
       <Card className={classes.card}>
         <CardActions className={classes.cardAction}>
           <MenuComponent

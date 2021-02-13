@@ -21,20 +21,20 @@ const ModalComponent = () => {
   const { isOpen, type } = ModalState.modal;
 
   return (
-    <section>
-      <Dialog
-        open={isOpen}
-        fullWidth={true}
-        maxWidth={
-          type === ModalTypeTypes.exercises
-            ? "xs"
-            : type === ModalTypeTypes.singleRoutine
-            ? "sm"
-            : "md"
-        }
-        onClose={() => dispatch(handleClose())}
-        aria-labelledby="form-dialog-title"
-      >
+    <Dialog
+      open={isOpen}
+      fullWidth={true}
+      maxWidth={
+        type === ModalTypeTypes.exercises
+          ? "xs"
+          : type === ModalTypeTypes.singleRoutine
+          ? "sm"
+          : "md"
+      }
+      onClose={() => dispatch(handleClose())}
+      aria-labelledby="form-dialog-title"
+    >
+      <section>
         {type === ModalTypeTypes.exercises ? (
           <Exercises />
         ) : type === ModalTypeTypes.routines ? (
@@ -42,8 +42,8 @@ const ModalComponent = () => {
         ) : (
           <SingleRoutine />
         )}
-      </Dialog>
-    </section>
+      </section>
+    </Dialog>
   );
 };
 

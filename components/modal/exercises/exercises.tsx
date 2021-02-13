@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       margin: "0 auto",
       [theme.breakpoints.down("xs")]: {
-        width: "250px",
+        width: "100%",
       },
     },
 
@@ -86,35 +86,41 @@ const Exercises = () => {
 
   return (
     <>
-      <DialogTitle id="form-dialog-title">Exercises</DialogTitle>
-      <DialogContent>
-        <List className={classes.root}>
-          {exercisesGroups!.length > 0 ? (
-            <>
-              {exercisesGroups?.map((item) => (
-                <ExercisesList
-                  item={item}
-                  key={item.id}
-                  selectedExercises={selectedExercises}
-                  selectExercise={selectExercise}
-                />
-              ))}
-            </>
-          ) : (
-            <CircularProgress size={50} />
-          )}
-        </List>
-      </DialogContent>
-      <DialogActions>
-        <Button color="primary" onClick={() => dispatch(handleClose())}>
-          Cancel
-        </Button>
-        {selectedExercises.length > 0 && (
-          <Button color="secondary" onClick={onClickAddButton}>
-            Add
+      <header>
+        <DialogTitle id="form-dialog-title">Exercises</DialogTitle>
+      </header>
+      <section>
+        <DialogContent>
+          <List className={classes.root}>
+            {exercisesGroups!.length > 0 ? (
+              <>
+                {exercisesGroups?.map((item) => (
+                  <ExercisesList
+                    item={item}
+                    key={item.id}
+                    selectedExercises={selectedExercises}
+                    selectExercise={selectExercise}
+                  />
+                ))}
+              </>
+            ) : (
+              <CircularProgress size={50} />
+            )}
+          </List>
+        </DialogContent>
+      </section>
+      <footer>
+        <DialogActions>
+          <Button color="primary" onClick={() => dispatch(handleClose())}>
+            Cancel
           </Button>
-        )}
-      </DialogActions>
+          {selectedExercises.length > 0 && (
+            <Button color="secondary" onClick={onClickAddButton}>
+              Add
+            </Button>
+          )}
+        </DialogActions>
+      </footer>
     </>
   );
 };

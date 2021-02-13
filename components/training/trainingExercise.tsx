@@ -39,6 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
         flexWrap: "wrap",
       },
     },
+    secondaryAction: {
+      top: "50%",
+      [theme.breakpoints.down("sm")]: {
+        top: "30px",
+      },
+    },
   })
 );
 
@@ -56,9 +62,12 @@ const TrainingExercise = ({ singleSet }: Props) => {
   };
 
   return (
-    <ListItem className={classes.listItem}>
-      <ListItemText primary={name} className={classes.listItemText} />
-      <Box className={classes.seriesContainer}>
+    <ListItem className={classes.listItem} ContainerComponent="article">
+      <header>
+        <ListItemText primary={name} className={classes.listItemText} />
+      </header>
+
+      <Box className={classes.seriesContainer} component="section">
         {singleSet.quantity.map((item, index) => (
           <SeriesComponent
             key={item.id}
@@ -77,8 +86,8 @@ const TrainingExercise = ({ singleSet }: Props) => {
           />
         )}
       </Box>
-      <ListItemSecondaryAction>
-        <IconButton onClick={removeButtonClick}>
+      <ListItemSecondaryAction className={classes.secondaryAction}>
+        <IconButton onClick={removeButtonClick} component="button">
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>

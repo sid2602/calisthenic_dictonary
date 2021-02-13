@@ -86,7 +86,7 @@ const SeriesComponent = ({
   return (
     <>
       {newSeries ? (
-        <Box className={classes.series}>
+        <Box className={classes.series} component="article">
           <Box component="span" className={classes.span}>
             new series{" "}
           </Box>
@@ -112,6 +112,7 @@ const SeriesComponent = ({
           <Box
             className={classes.series}
             style={{ cursor: "pointer" }}
+            component="article"
             onClick={() =>
               dispatch(
                 openDialog({
@@ -127,7 +128,9 @@ const SeriesComponent = ({
             <Box component="span" className={classes.span}>
               series {(index as number) + 1}
             </Box>
-            <Box>{message}</Box>
+            <Box component="p" style={{ margin: 0 }}>
+              {message}
+            </Box>
           </Box>
         </>
       )}

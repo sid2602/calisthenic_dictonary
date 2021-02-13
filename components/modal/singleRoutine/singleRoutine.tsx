@@ -34,6 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "space-between",
     },
+    button: {
+      [theme.breakpoints.down("sm")]: {
+        maxWidth: "110px",
+        fontSize: "0.7rem",
+      },
+    },
 
     flex: {
       display: "flex",
@@ -41,6 +47,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
       "& > *": {
         margin: "0 1rem",
+      },
+      [theme.breakpoints.down("sm")]: {
+        "& > *": {
+          margin: 0,
+        },
       },
     },
     listItem: {
@@ -83,51 +94,58 @@ const SingleRoutine = () => {
     <>
       {routines !== null && activeRoutine !== null ? (
         <>
-          <DialogTitle id="form-dialog-title">
-            <Box className={classes.spaceBetween}>
-              <Box className={classes.flex}>
-                <IconButton
-                  aria-controls="fade-menu"
-                  aria-label="settings"
+          <header>
+            <DialogTitle id="form-dialog-title">
+              <Box className={classes.spaceBetween}>
+                <Box className={classes.flex}>
+                  <IconButton
+                    aria-controls="fade-menu"
+                    aria-label="settings"
+                    onClick={() =>
+                      dispatch(openModal({ type: ModalTypeTypes.routines }))
+                    }
+                  >
+                    <ArrowBackIcon />
+                  </IconButton>
+                  <Typography>{routines[activeRoutine].name}</Typography>
+                </Box>
+                <Button
+                  color="secondary"
+                  className={classes.button}
                   onClick={() =>
-                    dispatch(openModal({ type: ModalTypeTypes.routines }))
+                    dispatch(setFlags({ addExerciseToRoutineFlag: true }))
                   }
                 >
-                  <ArrowBackIcon />
-                </IconButton>
-                <Typography>{routines[activeRoutine].name}</Typography>
+                  Add exercise to routine
+                </Button>
               </Box>
-              <Button
-                color="secondary"
-                onClick={() =>
-                  dispatch(setFlags({ addExerciseToRoutineFlag: true }))
-                }
-              >
-                Add exercise to routine
+            </DialogTitle>
+          </header>
+          <section>
+            <DialogContent className={classes.root}>
+              {routines[activeRoutine]?.Exercises.exercises &&
+                routines[activeRoutine]?.Exercises.exercises.map((exercise) => (
+                  <SingleRoutineList
+                    key={exercise.id + exercise.name}
+                    exercise={exercise}
+                    selectedExercises={selectedExercises}
+                    selectExercise={selectExercise}
+                  />
+                ))}
+            </DialogContent>
+          </section>
+          <footer>
+            <DialogActions>
+              <Button color="primary" onClick={() => dispatch(handleClose())}>
+                Cancel
               </Button>
-            </Box>
-          </DialogTitle>
-          <DialogContent className={classes.root}>
-            {routines[activeRoutine]?.Exercises.exercises &&
-              routines[activeRoutine]?.Exercises.exercises.map((exercise) => (
-                <SingleRoutineList
-                  key={exercise.id + exercise.name}
-                  exercise={exercise}
-                  selectedExercises={selectedExercises}
-                  selectExercise={selectExercise}
-                />
-              ))}
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" onClick={() => dispatch(handleClose())}>
-              Cancel
-            </Button>
-            {selectedExercises.length > 0 && (
-              <Button color="secondary" onClick={onClickAddButton}>
-                Add
-              </Button>
-            )}
-          </DialogActions>
+              {selectedExercises.length > 0 && (
+                <Button color="secondary" onClick={onClickAddButton}>
+                  Add
+                </Button>
+              )}
+            </DialogActions>
+          </footer>
         </>
       ) : null}
     </>
