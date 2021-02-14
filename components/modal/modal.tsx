@@ -7,7 +7,7 @@ import Dialog from "@material-ui/core/Dialog";
 import Exercises from "./exercises/exercises";
 import Routines from "./routines/routines";
 import SingleRoutine from "./singleRoutine/singleRoutine";
-
+import Profile from "./profile/profile";
 type ModalT = {
   modal: ModalTypes;
 };
@@ -25,7 +25,7 @@ const ModalComponent = () => {
       open={isOpen}
       fullWidth={true}
       maxWidth={
-        type === ModalTypeTypes.exercises
+        type === ModalTypeTypes.exercises || type === ModalTypeTypes.profile
           ? "xs"
           : type === ModalTypeTypes.singleRoutine
           ? "sm"
@@ -39,8 +39,10 @@ const ModalComponent = () => {
           <Exercises />
         ) : type === ModalTypeTypes.routines ? (
           <Routines />
-        ) : (
+        ) : type === ModalTypeTypes.singleRoutine ? (
           <SingleRoutine />
+        ) : (
+          <Profile />
         )}
       </section>
     </Dialog>

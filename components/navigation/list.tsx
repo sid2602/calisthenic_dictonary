@@ -51,8 +51,7 @@ const ListComponent = () => {
       name: "Profile",
       link: "",
       icon: <AccountCircleIcon style={{ fontSize: "35px" }} />,
-      onClick: () =>
-        showSnackbar(SnackbarType.info, "This feature will be available soon"),
+      onClick: () => dispatchModal(ModalTypeTypes.profile),
     },
     {
       name: "Exercises",

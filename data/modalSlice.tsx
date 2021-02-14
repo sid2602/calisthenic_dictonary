@@ -4,6 +4,7 @@ export enum ModalTypeTypes {
   exercises = "exercises",
   routines = "routines",
   singleRoutine = "singleRoutine",
+  profile = "profile",
 }
 
 export type ModalTypes = {

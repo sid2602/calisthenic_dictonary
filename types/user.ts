@@ -10,7 +10,8 @@ export type User = {
     updated_at: string;
     routine: number;
     trainings: number;
-  } | null;
+    username: string;
+  };
 };
 
 export type UserSlice = {
