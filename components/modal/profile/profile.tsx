@@ -7,7 +7,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles, Box } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { UserT } from "data/userSlice";
-
+import exportToExcel from "services/excelFile.js";
+import { TrainingT } from "data/trainingSlice";
 const useStyles = makeStyles((theme) => ({
   dialogActions: {
     justifyContent: "center",
@@ -25,7 +26,11 @@ const useStyles = makeStyles((theme) => ({
 const Profile = () => {
   const classes = useStyles();
   const UserState = useSelector<UserT, UserT["user"]>((state) => state.user);
+  const TrainingState = useSelector<TrainingT, TrainingT["training"]>(
+    (state) => state.training
+  );
   const { user } = UserState;
+  const { trainings } = TrainingState.training;
 
   return (
     <>
@@ -50,7 +55,11 @@ const Profile = () => {
       </section>
       <footer>
         <DialogActions className={classes.dialogActions}>
-          <Button color="secondary" autoFocus>
+          <Button
+            color="secondary"
+            autoFocus
+            onClick={() => exportToExcel(trainings)}
+          >
             export trainings to exel
           </Button>
         </DialogActions>
